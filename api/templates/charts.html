@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Users Leaderboard 2026</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -283,25 +284,25 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>👑 TOP 10 TikMedia USERS 2026</h1>
+            <h1><i class="fas fa-crown"></i> TOP 10 TikMedia USERS 2026</h1>
             <p>Most Active Users Leaderboard</p>
         </div>
 
         <div class="content">
             <div class="card">
-                <h2>🏆 Leaderboard</h2>
+                <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
                 <div id="leaderboard"></div>
             </div>
 
             <div class="card">
-                <h2>📊 Chart Downloads</h2>
+                <h2><i class="fas fa-chart-bar"></i> Chart Downloads</h2>
                 <div class="chart-container">
                     <canvas id="downloadsChart"></canvas>
                 </div>
             </div>
 
             <div class="card full-width">
-                <h2>📈 Timeline Activity</h2>
+                <h2><i class="fas fa-chart-line"></i> Timeline Activity</h2>
                 <div class="chart-container">
                     <canvas id="timelineChart"></canvas>
                 </div>
@@ -392,9 +393,9 @@
         }
 
         function getMedal(rank) {
-            if (rank === 1) return "🥇";
-            if (rank === 2) return "🥈";
-            if (rank === 3) return "🥉";
+            if (rank === 1) return '<i class="fas fa-medal" style="color: #ffd700;"></i>';
+            if (rank === 2) return '<i class="fas fa-medal" style="color: #c0c0c0;"></i>';
+            if (rank === 3) return '<i class="fas fa-medal" style="color: #cd7f32;"></i>';
             return rank + ".";
         }
 
@@ -408,7 +409,7 @@
                         <div class="user-id">(${user.id})</div>
                     </div>
                     <div class="stats">
-                        <div class="downloads">${user.downloads} downloads</div>
+                        <div class="downloads"><i class="fas fa-download"></i> ${user.downloads}</div>
                         <div class="timestamp">${new Date(user.timestamp).toLocaleString('id-ID')}</div>
                     </div>
                 </div>
