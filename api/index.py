@@ -1,6 +1,5 @@
 import os
 import requests
-from telebot import TeleBot
 from flask import Blueprint, render_template, jsonify
 from api.db import get_top_rankings
 
