@@ -43,6 +43,60 @@
             66% { transform: translate(-20px, 20px) rotate(240deg); }
         }
 
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -120,7 +174,20 @@
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.95);
+            animation: slideUp 0.5s ease forwards;
+            opacity: 0;
         }
+
+        .leaderboard-item:nth-child(1) { animation-delay: 0.1s; }
+        .leaderboard-item:nth-child(2) { animation-delay: 0.2s; }
+        .leaderboard-item:nth-child(3) { animation-delay: 0.3s; }
+        .leaderboard-item:nth-child(4) { animation-delay: 0.4s; }
+        .leaderboard-item:nth-child(5) { animation-delay: 0.5s; }
+        .leaderboard-item:nth-child(6) { animation-delay: 0.6s; }
+        .leaderboard-item:nth-child(7) { animation-delay: 0.7s; }
+        .leaderboard-item:nth-child(8) { animation-delay: 0.8s; }
+        .leaderboard-item:nth-child(9) { animation-delay: 0.9s; }
+        .leaderboard-item:nth-child(10) { animation-delay: 1s; }
 
         .leaderboard-item:hover {
             background: rgba(50, 50, 70, 0.5);
@@ -201,77 +268,33 @@
             grid-column: 1 / -1;
         }
 
-        .api-section {
-            background: rgba(30, 30, 46, 0.6);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-radius: 24px;
-            padding: 28px;
-            box-shadow: 
-                0 8px 32px 0 rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.95);
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            gap: 20px;
         }
 
-        .api-section h3 {
-            color: rgba(255, 255, 255, 0.95);
-            margin-bottom: 16px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(139, 92, 246, 0.2);
+            border-top: 4px solid rgba(139, 92, 246, 1);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .api-section pre {
-            background: rgba(20, 20, 30, 0.5);
-            backdrop-filter: blur(10px);
-            padding: 16px;
-            border-radius: 12px;
-            overflow-x: auto;
-            font-size: 0.88em;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .api-section ul {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .api-section ul li {
-            margin-bottom: 8px;
-        }
-
-        .api-section code {
-            background: rgba(99, 102, 241, 0.2);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-family: 'Monaco', 'Courier New', monospace;
-        }
-
-        .refresh-btn {
-            background: rgba(99, 102, 241, 0.3);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            color: white;
-            border: 1px solid rgba(99, 102, 241, 0.5);
-            padding: 14px 32px;
-            border-radius: 20px;
+        .loading-text {
+            color: rgba(255, 255, 255, 0.8);
             font-size: 1em;
             font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
-            transition: all 0.3s ease;
         }
 
-        .refresh-btn:hover {
-            background: rgba(99, 102, 241, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
-            border: 1px solid rgba(99, 102, 241, 0.7);
-        }
-
-        .refresh-btn:active {
-            transform: translateY(0);
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
         }
 
         @media (max-width: 768px) {
@@ -291,7 +314,12 @@
         <div class="content">
             <div class="card">
                 <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
-                <div id="leaderboard"></div>
+                <div id="leaderboard">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <div class="loading-text">Loading data<span class="loading-dots"></span></div>
+                    </div>
+                </div>
             </div>
 
             <div class="card">
@@ -321,7 +349,6 @@
             ]
         };
 
-        // Fungsi untuk fetch data dari API
         async function fetchDataFromAPI() {
             try {
                 const response = await fetch('/api', {
@@ -338,7 +365,6 @@
                 const data = await response.json();
                 
                 if (data && data.users) {
-                    // Normalisasi format data dari API
                     const normalizedUsers = data.users.map(user => ({
                         rank: user.rank,
                         name: user.name,
@@ -357,18 +383,16 @@
             }
         }
 
-        // Fungsi untuk auto-refresh data setiap 30 detik
         function startAutoRefresh(interval = 30000) {
             setInterval(() => {
                 fetchDataFromAPI();
             }, interval);
         }
 
-        // Fungsi untuk menampilkan notifikasi
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.textContent = message;
+            notification.innerHTML = message;
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
@@ -401,19 +425,31 @@
 
         function renderLeaderboard(data) {
             const container = document.getElementById('leaderboard');
-            container.innerHTML = data.map(user => `
-                <div class="leaderboard-item ${user.rank <= 3 ? 'top3' : ''}">
-                    <div class="rank">${getMedal(user.rank)}</div>
-                    <div class="user-info">
-                        <div class="user-name">${user.name}</div>
-                        <div class="user-id">(${user.id})</div>
-                    </div>
-                    <div class="stats">
-                        <div class="downloads"><i class="fas fa-download"></i> ${user.downloads}</div>
-                        <div class="timestamp"><i class="far fa-clock"></i> ${new Date(user.timestamp).toLocaleString('id-ID')}</div>
-                    </div>
+            
+            // Tampilkan loading spinner
+            container.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Loading data<span class="loading-dots"></span></div>
                 </div>
-            `).join('');
+            `;
+            
+            // Delay untuk animasi loading
+            setTimeout(() => {
+                container.innerHTML = data.map(user => `
+                    <div class="leaderboard-item ${user.rank <= 3 ? 'top3' : ''}">
+                        <div class="rank">${getMedal(user.rank)}</div>
+                        <div class="user-info">
+                            <div class="user-name">${user.name}</div>
+                            <div class="user-id">(${user.id})</div>
+                        </div>
+                        <div class="stats">
+                            <div class="downloads"><i class="fas fa-download"></i> ${user.downloads}</div>
+                            <div class="timestamp"><i class="far fa-clock"></i> ${new Date(user.timestamp).toLocaleString('id-ID')}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }, 800);
         }
 
         function createDownloadsChart(data) {
@@ -423,57 +459,63 @@
                 downloadsChart.destroy();
             }
 
-            downloadsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: data.map(u => u.name.length > 10 ? u.name.substring(0, 10) + '...' : u.name),
-                    datasets: [{
-                        label: 'Downloads',
-                        data: data.map(u => u.downloads),
-                        backgroundColor: data.map((u, i) => 
-                            i < 3 ? 'rgba(139, 92, 246, 0.7)' : 'rgba(99, 102, 241, 0.5)'
-                        ),
-                        borderColor: data.map((u, i) => 
-                            i < 3 ? 'rgba(167, 139, 250, 1)' : 'rgba(129, 140, 248, 0.8)'
-                        ),
-                        borderWidth: 2,
-                        borderRadius: 12,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        title: {
-                            display: true,
-                            text: 'Download Count by User',
-                            color: 'rgba(255, 255, 255, 0.95)',
-                            font: { size: 14, weight: '600' }
-                        }
+            setTimeout(() => {
+                downloadsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.map(u => u.name.length > 10 ? u.name.substring(0, 10) + '...' : u.name),
+                        datasets: [{
+                            label: 'Downloads',
+                            data: data.map(u => u.downloads),
+                            backgroundColor: data.map((u, i) => 
+                                i < 3 ? 'rgba(139, 92, 246, 0.7)' : 'rgba(99, 102, 241, 0.5)'
+                            ),
+                            borderColor: data.map((u, i) => 
+                                i < 3 ? 'rgba(167, 139, 250, 1)' : 'rgba(129, 140, 248, 0.8)'
+                            ),
+                            borderWidth: 2,
+                            borderRadius: 12,
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { 
-                                stepSize: 5,
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Download Count by User',
+                                color: 'rgba(255, 255, 255, 0.95)',
+                                font: { size: 14, weight: '600' }
                             }
                         },
-                        x: {
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.8)'
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { 
+                                    stepSize: 5,
+                                    color: 'rgba(255, 255, 255, 0.8)'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
                             },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                            x: {
+                                ticks: {
+                                    color: 'rgba(255, 255, 255, 0.8)'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }, 900);
         }
 
         function createTimelineChart(data) {
@@ -487,59 +529,65 @@
                 new Date(a.timestamp) - new Date(b.timestamp)
             );
 
-            timelineChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: sortedByTime.map(u => new Date(u.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })),
-                    datasets: [{
-                        label: 'Downloads Over Time',
-                        data: sortedByTime.map(u => u.downloads),
-                        borderColor: 'rgba(139, 92, 246, 0.9)',
-                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                        tension: 0.4,
-                        fill: true,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        pointBackgroundColor: 'rgba(167, 139, 250, 0.9)',
-                        pointBorderColor: 'rgba(255, 255, 255, 1)',
-                        pointBorderWidth: 2,
-                        borderWidth: 3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        title: {
-                            display: true,
-                            text: 'Activity Timeline',
-                            color: 'rgba(255, 255, 255, 0.95)',
-                            font: { size: 14, weight: '600' }
-                        }
+            setTimeout(() => {
+                timelineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: sortedByTime.map(u => new Date(u.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })),
+                        datasets: [{
+                            label: 'Downloads Over Time',
+                            data: sortedByTime.map(u => u.downloads),
+                            borderColor: 'rgba(139, 92, 246, 0.9)',
+                            backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: 'rgba(167, 139, 250, 0.9)',
+                            pointBorderColor: 'rgba(255, 255, 255, 1)',
+                            pointBorderWidth: 2,
+                            borderWidth: 3
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { 
-                                stepSize: 5,
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeInOutQuart'
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Activity Timeline',
+                                color: 'rgba(255, 255, 255, 0.95)',
+                                font: { size: 14, weight: '600' }
                             }
                         },
-                        x: {
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.8)'
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { 
+                                    stepSize: 5,
+                                    color: 'rgba(255, 255, 255, 0.8)'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
                             },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                            x: {
+                                ticks: {
+                                    color: 'rgba(255, 255, 255, 0.8)'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }, 1100);
         }
 
         function updateVisualizations(data) {
@@ -551,49 +599,24 @@
 
         function loadSampleData() {
             updateVisualizations(sampleData.users);
-            showNotification('Sample data dimuat! 📊', 'info');
+            showNotification('<i class="fas fa-database"></i> Sample data dimuat!', 'info');
         }
 
         function refreshData() {
-            showNotification('Memuat ulang data... 🔄', 'info');
+            showNotification('<i class="fas fa-spinner fa-spin"></i> Memuat ulang data...', 'info');
             fetchDataFromAPI();
         }
 
-        // Event listener untuk POST messages
         window.addEventListener('message', (event) => {
             if (event.data && event.data.users) {
                 updateVisualizations(event.data.users);
             }
         });
 
-        // Auto-load data saat halaman dimuat
         window.addEventListener('DOMContentLoaded', () => {
             fetchDataFromAPI();
-            startAutoRefresh(30000); // Auto-refresh setiap 30 detik
+            startAutoRefresh(30000);
         });
     </script>
-    <style>
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-        }
-    </style>
 </body>
 </html>
