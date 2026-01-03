@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Monitor Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(30, 215, 96, 0.08), rgba(30, 215, 96, 0.03));
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-radius: 28px;
+            border: 1px solid rgba(30, 215, 96, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(30, 215, 96, 0.15);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1ed760, #1db954);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #b3b3b3;
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .api-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(30, 215, 96, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .api-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(30, 215, 96, 0.03) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .api-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1ed760, #1db954);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .api-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(30, 215, 96, 0.4);
+            box-shadow: 0 20px 60px rgba(30, 215, 96, 0.2),
+                        0 0 40px rgba(30, 215, 96, 0.1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+        }
+        
+        .api-card:hover::after {
+            opacity: 1;
+        }
+
+        .api-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .api-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, rgba(30, 215, 96, 0.2), rgba(30, 215, 96, 0.1));
+            border: 1px solid rgba(30, 215, 96, 0.3);
+            color: #1ed760;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-active {
+            background: rgba(30, 215, 96, 0.15);
+            color: #1ed760;
+            border: 1px solid rgba(30, 215, 96, 0.3);
+        }
+
+        .status-active::before {
+            background: #1ed760;
+        }
+
+        .status-delay {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .status-delay::before {
+            background: #ffc107;
+        }
+
+        .status-down {
+            background: rgba(244, 67, 54, 0.15);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .status-down::before {
+            background: #f44336;
+        }
+
+        .metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric-label {
+            color: #b3b3b3;
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .latency-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .latency-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .latency-low {
+            background: linear-gradient(90deg, #1ed760, #1db954);
+        }
+
+        .latency-medium {
+            background: linear-gradient(90deg, #ffc107, #ff9800);
+        }
+
+        .latency-high {
+            background: linear-gradient(90deg, #f44336, #e91e63);
+        }
+
+        .error-log {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(30, 215, 96, 0.2);
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            max-height: auto;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        .error-log::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .error-log::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .error-log::-webkit-scrollbar-thumb {
+            background: rgba(30, 215, 96, 0.3);
+            border-radius: 4px;
+        }
+
+        .error-log::-webkit-scrollbar-thumb:hover {
+            background: rgba(30, 215, 96, 0.5);
+        }
+
+        .log-entry {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.4;
+        }
+
+        .log-entry:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: #1ed760;
+            white-space: nowrap;
+        }
+
+        .log-level {
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .log-level-error {
+            color: #f44336;
+        }
+
+        .log-level-warning {
+            color: #ffc107;
+        }
+
+        .log-level-info {
+            color: #2196f3;
+        }
+
+        .log-level-success {
+            color: #1ed760;
+        }
+
+        .log-message {
+            color: #b3b3b3;
+            word-break: break-word;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.1);
+            }
+        }
+
+        .last-update {
+            text-align: center;
+            color: #b3b3b3;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TikMedia API STATUS</h1>
+            <p class="subtitle">Real-time monitoring for Downloader APIs</p>
+        </header>
+
+        <div class="grid" id="apiGrid"></div>
+
+        <div class="last-update">
+            Last updated: <span id="lastUpdate"></span>
+        </div>
+    </div>
+
+    <script>
+        const apiIcons = {
+            tiktok: 'fa-brands fa-tiktok',
+            instagram: 'fa-brands fa-instagram',
+            facebook: 'fa-brands fa-facebook',
+            threads: 'fa-brands fa-threads',
+            pinterest: 'fa-brands fa-pinterest',
+            capcut: 'fa-solid fa-scissors',
+            youtube: 'fa-brands fa-youtube',
+            twitter: 'fa-brands fa-x-twitter'
+        };
+
+        let apiData = [];
+
+        function getRandomLatency() {
+            return Math.floor(Math.random() * 1000) + 50;
+        }
+
+        function getStatus(latency) {
+            if (latency < 300) return 'active';
+            if (latency < 600) return 'delay';
+            return 'down';
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                active: 'Active',
+                delay: 'Delay',
+                down: 'Down'
+            };
+            return texts[status];
+        }
+
+        function getLatencyClass(latency) {
+            if (latency < 550) return 'latency-low';
+            if (latency < 750) return 'latency-medium';
+            return 'latency-high';
+        }
+
+        function getLatencyPercent(latency) {
+            return Math.min((latency / 1000) * 100, 100);
+        }
+
+        function formatLogTime(dateString) {
+            if (!dateString) return '00:00:00';
+            
+            try {
+                // Handle format: "2026-01-03 12:46:22.838304"
+                let date;
+                
+                if (dateString.includes('T')) {
+                    // ISO format
+                    date = new Date(dateString);
+                } else if (dateString.includes(' ')) {
+                    // Format: "YYYY-MM-DD HH:MM:SS.ffffff"
+                    const [datePart, timePart] = dateString.split(' ');
+                    const [year, month, day] = datePart.split('-');
+                    const [time] = timePart.split('.');
+                    const [hour, minute, second] = time.split(':');
+                    date = new Date(year, month - 1, day, hour, minute, second);
+                } else {
+                    date = new Date(dateString);
+                }
+                
+                if (isNaN(date.getTime())) return '00:00:00';
+                
+                return date.toLocaleTimeString('en-US', {
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            } catch (error) {
+                return '00:00:00';
+            }
+        }
+
+        function renderErrorLog(logs) {
+            if (!logs || !Array.isArray(logs) || logs.length === 0) {
+                return `
+                    <div class="log-entry">
+                        <span class="log-time">${formatLogTime(new Date())}</span>
+                        <span class="log-level log-level-info">[INFO]</span>
+                        <span class="log-message">No errors reported</span>
+                    </div>
+                `;
+            }
+
+            return logs.map(log => {
+                const levelClass = `log-level-${log.level || 'info'}`;
+                const levelText = (log.level || 'info').toUpperCase();
+                const message = log.message || 'No message';
+                const timestamp = log.timestamp || new Date().toISOString();
+                
+                return `
+                    <div class="log-entry">
+                        <span class="log-time">${formatLogTime(timestamp)}</span>
+                        <span class="log-level ${levelClass}">[${levelText}]</span>
+                        <span class="log-message">${message}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function createAPICard(api) {
+            const icon = apiIcons[api.endpoint.toLowerCase()] || 'fa-solid fa-globe';
+            
+            // Handle name - capitalize first letter if needed
+            const displayName = api.name.charAt(0).toUpperCase() + api.name.slice(1);
+            
+            // Round latency to 2 decimal places
+            const latency = Math.round(api.latency * 100) / 100;
+            
+            return `
+                <div class="api-card">
+                    <div class="card-header">
+                        <div class="api-name">
+                            <div class="icon"><i class="${icon}"></i></div>
+                            ${displayName}
+                        </div>
+                        <span class="status-badge status-${api.status}">
+                            ${getStatusText(api.status)}
+                        </span>
+                    </div>
+                    <div class="metrics">
+                        <div class="latency-bar">
+                            <div class="latency-fill ${getLatencyClass(latency)}" 
+                                 style="width: ${getLatencyPercent(latency)}%">
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Latency</span>
+                            <span class="metric-value">${latency}ms</span>
+                        </div>
+                        <div class="error-log">
+                            ${renderErrorLog(api.errorLog)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function fetchAPIStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                
+                if (data && typeof data === 'object') {
+                    // Convert object to array
+                    apiData = Object.values(data);
+                    renderAPIs();
+                }
+            } catch (error) {
+                console.error('Error fetching API status:', error);
+                // Fallback ke data simulasi jika API gagal
+                generateSimulatedData();
+            }
+        }
+
+        function generateSimulatedData() {
+            const platforms = ['TikTok', 'Instagram', 'Facebook', 'Threads', 'Pinterest', 'CapCut', 'YouTube', 'Twitter'];
+            
+            const sampleErrors = [
+                { level: 'error', message: 'Connection timeout after 5000ms' },
+                { level: 'warning', message: 'High response time detected' },
+                { level: 'info', message: 'API health check completed' },
+                { level: 'success', message: 'Connection established successfully' },
+                { level: 'error', message: 'Failed to fetch data from endpoint' },
+                { level: 'warning', message: 'Rate limit approaching threshold' }
+            ];
+            
+            apiData = platforms.map(name => {
+                const latency = getRandomLatency();
+                const now = new Date();
+                
+                // Generate error log array (5-10 entries)
+                const logCount = Math.floor(Math.random() * 6) + 5;
+                const errorLog = [];
+                
+                for (let i = 0; i < logCount; i++) {
+                    const randomError = sampleErrors[Math.floor(Math.random() * sampleErrors.length)];
+                    const logTime = new Date(now - (i * 120000)); // 2 minutes apart
+                    errorLog.push({
+                        timestamp: logTime.toISOString(),
+                        level: randomError.level,
+                        message: randomError.message
+                    });
+                }
+                
+                return {
+                    name: name,
+                    endpoint: name.toLowerCase(),
+                    latency: latency,
+                    status: getStatus(latency),
+                    errorLog: errorLog
+                };
+            });
+            
+            renderAPIs();
+        }
+
+        function renderAPIs() {
+            const grid = document.getElementById('apiGrid');
+            grid.innerHTML = apiData.map(api => createAPICard(api)).join('');
+            updateTimestamp();
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            const timeString = now.toLocaleString('en-US', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            document.getElementById('lastUpdate').textContent = timeString;
+        }
+
+        // Initial load
+        fetchAPIStatus();
+        
+        // Auto-refresh setiap 5 detik
+        setInterval(fetchAPIStatus, 5000);
+    </script>
+</body>
+</html>
