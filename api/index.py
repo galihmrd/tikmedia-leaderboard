@@ -49,7 +49,7 @@ def status_api():
                 "status": "down"
             },
         }
-    return make_response(jsonify(data))
+    return jsonify(data)
 
 uptime_web = Blueprint("status_web", __name__)
 @uptime_web.route("/downloader/uptime")
