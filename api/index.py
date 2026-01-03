@@ -1,13 +1,60 @@
 import os
+from datetime import datetime
 import requests
 from flask import Blueprint, render_template, jsonify
 from api.db import get_top_rankings
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+BASE_API = os.getenv("BASE_API")
 
+uptime = Blueprint("status", __name__)
+@uptime.route("/api/status")
+def status_api():
+    try:
+        response = requests.get(
+            f"{BASE_API}/api/status"
+        )
+        if response.status_code == 200:
+            data = response.json()
+        else:
+            data = {
+                "facebook": {
+                    "endpoint": "Outage",
+                    "errorLog": [
+                        {
+                            "level": "error",
+                            "message": "Server down!",
+                            "timestamp": str(datetime.now())
+                        },
+                    ],
+                    "latency": 9999,
+                    "name": "outage",
+                    "status": "down"
+                },
+            }
+    except Exception:
+        data = {
+            "facebook": {
+                "endpoint": "Outage",
+                "errorLog": [
+                    {
+                        "level": "error",
+                        "message": "Server down!",
+                        "timestamp": str(datetime.now())
+                    },
+                ],
+                "latency": 9999,
+                "name": "outage",
+                "status": "down"
+            },
+        }
+    return make_response(jsonify(data))
 
-
+uptime_web = Blueprint("status_web", __name__)
+@uptime_web.route("/downloader/uptime")
+def status_web():
+    return render_template("api_monitor.html")
 
 home_ = Blueprint("home", __name__)
 @home_.route('/')
