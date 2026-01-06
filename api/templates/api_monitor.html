@@ -14,8 +14,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000000;
-            color: #fff;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f5f9ff 50%, #ffffff 100%);
+            color: #1a237e;
             min-height: 100vh;
             padding: 20px;
             overflow-x: hidden;
@@ -29,27 +29,30 @@
         header {
             text-align: center;
             margin-bottom: 40px;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, rgba(30, 215, 96, 0.08), rgba(30, 215, 96, 0.03));
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
             backdrop-filter: blur(40px) saturate(180%);
             -webkit-backdrop-filter: blur(40px) saturate(180%);
             border-radius: 28px;
-            border: 1px solid rgba(30, 215, 96, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(30, 215, 96, 0.15);
+            border: 2px solid rgba(66, 133, 244, 0.2);
+            box-shadow: 0 10px 40px rgba(66, 133, 244, 0.15),
+                        0 4px 12px rgba(33, 150, 243, 0.1);
         }
 
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #1ed760, #1db954);
+            background: linear-gradient(135deg, #1976d2, #2196f3, #42a5f5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
-            color: #b3b3b3;
+            color: #5e6c84;
             font-size: 1rem;
+            font-weight: 500;
         }
 
         .grid {
@@ -60,13 +63,14 @@
         }
 
         .api-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
             backdrop-filter: blur(40px) saturate(180%);
             -webkit-backdrop-filter: blur(40px) saturate(180%);
             border-radius: 24px;
             padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px 0 rgba(30, 215, 96, 0.1);
+            border: 2px solid rgba(66, 133, 244, 0.15);
+            box-shadow: 0 8px 32px rgba(66, 133, 244, 0.1),
+                        0 4px 12px rgba(33, 150, 243, 0.05);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
@@ -79,7 +83,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(30, 215, 96, 0.03) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(66, 133, 244, 0.08) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.4s ease;
         }
@@ -90,18 +94,18 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #1ed760, #1db954);
+            height: 4px;
+            background: linear-gradient(90deg, #1976d2, #2196f3, #42a5f5);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         .api-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(30, 215, 96, 0.4);
-            box-shadow: 0 20px 60px rgba(30, 215, 96, 0.2),
-                        0 0 40px rgba(30, 215, 96, 0.1);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            transform: translateY(-10px);
+            border-color: rgba(66, 133, 244, 0.4);
+            box-shadow: 0 20px 60px rgba(66, 133, 244, 0.2),
+                        0 10px 30px rgba(33, 150, 243, 0.15);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(247, 251, 255, 0.95));
         }
         
         .api-card:hover::after {
@@ -125,19 +129,21 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: #1565c0;
         }
 
         .icon {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.3rem;
-            background: linear-gradient(135deg, rgba(30, 215, 96, 0.2), rgba(30, 215, 96, 0.1));
-            border: 1px solid rgba(30, 215, 96, 0.3);
-            color: #1ed760;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px solid rgba(66, 133, 244, 0.3);
+            color: #1976d2;
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
         }
 
         .status-badge {
@@ -159,33 +165,36 @@
         }
 
         .status-active {
-            background: rgba(30, 215, 96, 0.15);
-            color: #1ed760;
-            border: 1px solid rgba(30, 215, 96, 0.3);
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+            border: 2px solid rgba(76, 175, 80, 0.3);
         }
 
         .status-active::before {
-            background: #1ed760;
+            background: #4caf50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
         }
 
         .status-delay {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-            border: 1px solid rgba(255, 193, 7, 0.3);
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #f57c00;
+            border: 2px solid rgba(255, 152, 0, 0.3);
         }
 
         .status-delay::before {
-            background: #ffc107;
+            background: #ff9800;
+            box-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
         }
 
         .status-down {
-            background: rgba(244, 67, 54, 0.15);
-            color: #f44336;
-            border: 1px solid rgba(244, 67, 54, 0.3);
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #c62828;
+            border: 2px solid rgba(244, 67, 54, 0.3);
         }
 
         .status-down::before {
             background: #f44336;
+            box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
         }
 
         .metrics {
@@ -198,56 +207,62 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+            padding: 12px 14px;
+            background: linear-gradient(135deg, #f5f9ff, #ffffff);
             backdrop-filter: blur(10px);
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(66, 133, 244, 0.15);
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.05);
         }
 
         .metric-label {
-            color: #b3b3b3;
+            color: #5e6c84;
             font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .metric-value {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.1rem;
+            color: #1565c0;
         }
 
         .latency-bar {
             width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.05);
+            height: 8px;
+            background: linear-gradient(135deg, #e3f2fd, #f5f9ff);
             border-radius: 10px;
             overflow: hidden;
             margin-top: 8px;
+            box-shadow: inset 0 2px 4px rgba(66, 133, 244, 0.1);
         }
 
         .latency-fill {
             height: 100%;
             border-radius: 10px;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
         }
 
         .latency-low {
-            background: linear-gradient(90deg, #1ed760, #1db954);
+            background: linear-gradient(90deg, #4caf50, #66bb6a);
         }
 
         .latency-medium {
-            background: linear-gradient(90deg, #ffc107, #ff9800);
+            background: linear-gradient(90deg, #ff9800, #ffa726);
         }
 
         .latency-high {
-            background: linear-gradient(90deg, #f44336, #e91e63);
+            background: linear-gradient(90deg, #f44336, #ef5350);
         }
 
         .error-log {
             margin-top: 12px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 8px;
-            border: 1px solid rgba(30, 215, 96, 0.2);
+            padding: 14px;
+            background: linear-gradient(135deg, #fafbff, #f5f9ff);
+            border-radius: 12px;
+            border: 1px solid rgba(66, 133, 244, 0.2);
+            box-shadow: inset 0 2px 6px rgba(66, 133, 244, 0.05);
             font-family: 'Courier New', monospace;
             font-size: 0.75rem;
             max-height: auto;
@@ -256,21 +271,21 @@
         }
 
         .error-log::-webkit-scrollbar {
-            width: 4px;
+            width: 6px;
         }
 
         .error-log::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(66, 133, 244, 0.05);
             border-radius: 4px;
         }
 
         .error-log::-webkit-scrollbar-thumb {
-            background: rgba(30, 215, 96, 0.3);
+            background: linear-gradient(135deg, #64b5f6, #42a5f5);
             border-radius: 4px;
         }
 
         .error-log::-webkit-scrollbar-thumb:hover {
-            background: rgba(30, 215, 96, 0.5);
+            background: linear-gradient(135deg, #42a5f5, #2196f3);
         }
 
         .log-entry {
@@ -278,7 +293,7 @@
             gap: 8px;
             margin-bottom: 8px;
             padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(66, 133, 244, 0.1);
             line-height: 1.4;
         }
 
@@ -289,7 +304,8 @@
         }
 
         .log-time {
-            color: #1ed760;
+            color: #1976d2;
+            font-weight: 600;
             white-space: nowrap;
         }
 
@@ -299,23 +315,23 @@
         }
 
         .log-level-error {
-            color: #f44336;
+            color: #d32f2f;
         }
 
         .log-level-warning {
-            color: #ffc107;
+            color: #f57c00;
         }
 
         .log-level-info {
-            color: #2196f3;
+            color: #1976d2;
         }
 
         .log-level-success {
-            color: #1ed760;
+            color: #388e3c;
         }
 
         .log-message {
-            color: #b3b3b3;
+            color: #5e6c84;
             word-break: break-word;
         }
 
@@ -325,16 +341,22 @@
                 transform: scale(1);
             }
             50% {
-                opacity: 0.5;
-                transform: scale(1.1);
+                opacity: 0.6;
+                transform: scale(1.2);
             }
         }
 
         .last-update {
             text-align: center;
-            color: #b3b3b3;
+            color: #5e6c84;
             margin-top: 30px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
+            border-radius: 16px;
+            border: 1px solid rgba(66, 133, 244, 0.15);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.08);
         }
 
         @media (max-width: 768px) {
@@ -409,14 +431,11 @@
             if (!dateString) return '00:00:00';
             
             try {
-                // Handle format: "2026-01-03 12:46:22.838304"
                 let date;
                 
                 if (dateString.includes('T')) {
-                    // ISO format
                     date = new Date(dateString);
                 } else if (dateString.includes(' ')) {
-                    // Format: "YYYY-MM-DD HH:MM:SS.ffffff"
                     const [datePart, timePart] = dateString.split(' ');
                     const [year, month, day] = datePart.split('-');
                     const [time] = timePart.split('.');
@@ -468,11 +487,7 @@
 
         function createAPICard(api) {
             const icon = apiIcons[api.endpoint.toLowerCase()] || 'fa-solid fa-globe';
-            
-            // Handle name - capitalize first letter if needed
             const displayName = api.name.charAt(0).toUpperCase() + api.name.slice(1);
-            
-            // Round latency to 2 decimal places
             const latency = Math.round(api.latency * 100) / 100;
             
             return `
@@ -510,13 +525,11 @@
                 const data = await response.json();
                 
                 if (data && typeof data === 'object') {
-                    // Convert object to array
                     apiData = Object.values(data);
                     renderAPIs();
                 }
             } catch (error) {
                 console.error('Error fetching API status:', error);
-                // Fallback ke data simulasi jika API gagal
                 generateSimulatedData();
             }
         }
@@ -536,14 +549,12 @@
             apiData = platforms.map(name => {
                 const latency = getRandomLatency();
                 const now = new Date();
-                
-                // Generate error log array (5-10 entries)
                 const logCount = Math.floor(Math.random() * 6) + 5;
                 const errorLog = [];
                 
                 for (let i = 0; i < logCount; i++) {
                     const randomError = sampleErrors[Math.floor(Math.random() * sampleErrors.length)];
-                    const logTime = new Date(now - (i * 120000)); // 2 minutes apart
+                    const logTime = new Date(now - (i * 120000));
                     errorLog.push({
                         timestamp: logTime.toISOString(),
                         level: randomError.level,
@@ -583,10 +594,7 @@
             document.getElementById('lastUpdate').textContent = timeString;
         }
 
-        // Initial load
         fetchAPIStatus();
-        
-        // Auto-refresh setiap 5 detik
         setInterval(fetchAPIStatus, 5000);
     </script>
 </body>
