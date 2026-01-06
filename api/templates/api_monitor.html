@@ -359,6 +359,63 @@
             box-shadow: 0 4px 12px rgba(66, 133, 244, 0.08);
         }
 
+        .floating-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1976d2, #2196f3);
+            border: none;
+            box-shadow: 0 8px 24px rgba(33, 150, 243, 0.35),
+                        0 4px 12px rgba(33, 150, 243, 0.25);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        .floating-button:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 32px rgba(33, 150, 243, 0.45),
+                        0 6px 16px rgba(33, 150, 243, 0.35);
+            background: linear-gradient(135deg, #1565c0, #1976d2);
+        }
+
+        .floating-button:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .floating-button i {
+            color: #ffffff;
+            font-size: 1.5rem;
+        }
+
+        .button-tooltip {
+            position: absolute;
+            right: 75px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
+            color: #1565c0;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border: 2px solid rgba(66, 133, 244, 0.2);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
+        }
+
+        .floating-button:hover .button-tooltip {
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2rem;
@@ -382,6 +439,11 @@
         <div class="last-update">
             Last updated: <span id="lastUpdate"></span>
         </div>
+
+        <a href="/" class="floating-button">
+            <span class="button-tooltip">Charts</span>
+            <i class="fa-solid fa-chart-line"></i>
+        </a>
     </div>
 
     <script>
