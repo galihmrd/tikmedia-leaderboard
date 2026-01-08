@@ -102,3 +102,23 @@ def home():
                 }
         )
     return jsonify({"users": data_list})
+
+downloader_web = Blueprint("downloader_web", __name__)
+@downloader_web.route("/downloader")
+def dl_web():
+    return render_template("downloader.html")
+
+dl_api = Blueprint("dl_api", __name__)
+@dl_api_.route('/api/dl')
+def dl_api():
+    url = request.args.get("url")
+    if url:
+        response = requests.get(
+            f"{BASE_API}/api?url={url}"
+        )
+        if response.status_code == 200:
+            data = response.json()
+            return jsonify(data)
+        return jsonify({"error": response.text})
+    else:
+        return jsonify({"error": "input not found!"})
