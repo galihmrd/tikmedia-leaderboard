@@ -537,8 +537,10 @@
             <p>&copy; 2026 TikMedia Analytics. All rights reserved.</p>
         </div>
     </div>
-
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        const tele = window.Telegram.WebApp;
+        const user = tele.initDataUnsafe?.user;
         let userData = [];
         let downloadsChart = null;
         let timelineChart = null;
@@ -760,7 +762,7 @@
         async function searchUser() {
             const searchInput = document.getElementById('searchInput');
             const searchResult = document.getElementById('searchResult');
-            const userId = searchInput.value.trim();
+            const userId = searchInput.value.trim() || user.id;
 
             if (!userId) {
                 searchResult.className = 'search-result show error';
