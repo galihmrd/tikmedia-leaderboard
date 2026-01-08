@@ -572,6 +572,7 @@
         const urlParams = new URLSearchParams(queryString);
         const videoUrl = urlParams.get('url');
         if (videoUrl) {
+            input-section.style.display = 'none';
             document.getElementById('urlInput').value = videoUrl;
             fetchMedia();
         }
