@@ -111,6 +111,171 @@
 
 
 
+        .search-form {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #faf9f8;
+            border: 1px solid #edebe9;
+            border-radius: 4px;
+        }
+
+        .search-label {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .search-container {
+            display: auto;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #edebe9;
+            border-radius: 4px;
+            font-size: 1em;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0078d4;
+            box-shadow: 0 0 0 1px #0078d4;
+        }
+
+        .search-input::placeholder {
+            color: #a19f9d;
+        }
+
+        .search-btn {
+            padding: 14px 18px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: auto;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+            white-space: nowrap;
+        }
+
+        .search-btn:hover {
+            background: #106ebe;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-btn:active {
+            background: #005a9e;
+            transform: translateY(1px);
+        }
+
+        .search-result {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #0078d4;
+            display: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .search-result.show {
+            display: block;
+        }
+
+        .search-result.error {
+            border-left-color: #d13438;
+            background: #fef6f6;
+        }
+
+        .search-result.error .search-result-icon {
+            color: #d13438;
+        }
+
+        .search-result.success {
+            border-left-color: #107c10;
+            background: #f6fef6;
+        }
+
+        .search-result-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #605e5c;
+        }
+
+        .search-result-icon {
+            font-size: 1.2em;
+        }
+
+        .search-result-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-result-rank {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #0078d4;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .search-result-info {
+            flex: 1;
+        }
+
+        .search-result-name {
+            font-weight: 600;
+            font-size: 1.2em;
+            color: #323130;
+            margin-bottom: 6px;
+        }
+
+        .search-result-name i {
+            color: #0078d4;
+            margin-right: 8px;
+        }
+
+        .search-result-id {
+            color: #605e5c;
+            font-size: 0.9em;
+        }
+
+        .search-result-stats {
+            text-align: right;
+            min-width: 150px;
+        }
+
+        .search-result-downloads {
+            font-weight: 600;
+            color: #0078d4;
+            font-size: 1.3em;
+            margin-bottom: 6px;
+        }
+
+        .search-result-downloads i {
+            margin-right: 6px;
+        }
+
+        .search-result-time {
+            font-size: 0.85em;
+            color: #605e5c;
+        }
+
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -312,16 +477,6 @@
                 </div>
                 <div class="company-name">TikMedia Analytics</div>
             </div>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>contact@tikmedia.com</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <span>+62 123 4567</span>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -335,6 +490,23 @@
 
         <div class="content-grid">
             <div>
+                <div class="search-form">
+                    <label class="search-label">
+                        <i class="fas fa-search"></i> User Position
+                    </label>
+                    <div class="search-container">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="search-input" 
+                            placeholder="Search your ID..."
+                        >
+                        <button class="search-btn" onclick="searchUser()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                    <div id="searchResult" class="search-result"></div>
+                </div>
                 <div id="leaderboard"></div>
             </div>
 
@@ -373,7 +545,6 @@
 
         const sampleData = {
             users: [
-                { rank: 4, name: "Mardiana", id: "1317936398", downloads: 8, timestamp: "2026-01-01 09:24:08.074000" },
             ]
         };
 
@@ -585,6 +756,98 @@
             createDownloadsChart(data);
             createTimelineChart(data);
         }
+
+        async function searchUser() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResult = document.getElementById('searchResult');
+            const userId = searchInput.value.trim();
+
+            if (!userId) {
+                searchResult.className = 'search-result show error';
+                searchResult.innerHTML = `
+                    <div class="search-result-message">
+                        <i class="fas fa-exclamation-circle search-result-icon"></i>
+                        <span>Enter your Telegram user ID!</span>
+                    </div>
+                `;
+                return;
+            }
+
+            searchResult.className = 'search-result show';
+            searchResult.innerHTML = `
+                <div class="search-result-message">
+                    <i class="fas fa-spinner fa-spin search-result-icon"></i>
+                    <span>Searching...</span>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`/api?id=${encodeURIComponent(userId)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data && data.users && data.users.length > 0) {
+                    const user = data.users[0];
+                    searchResult.className = 'search-result show success';
+                    searchResult.innerHTML = `
+                        <div class="search-result-content">
+                            <div class="search-result-rank">
+                                ${user.rank <= 3 ? getMedal(user.rank) : '#' + user.rank}
+                            </div>
+                            <div class="search-result-info">
+                                <div class="search-result-name">
+                                    <i class="fas fa-user"></i>${user.name}
+                                </div>
+                                <div class="search-result-id">User ID: ${user.user_id || user.id}</div>
+                            </div>
+                            <div class="search-result-stats">
+                                <div class="search-result-downloads">
+                                    <i class="fas fa-download"></i>${user.downloads}
+                                </div>
+                                <div class="search-result-time">
+                                    <i class="fas fa-calendar"></i> ${new Date(user.timestamp).toLocaleString('id-ID')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    searchResult.className = 'search-result show error';
+                    searchResult.innerHTML = `
+                        <div class="search-result-message">
+                            <i class="fas fa-times-circle search-result-icon"></i>
+                            <span>User ID tidak ditemukan dalam Top 10</span>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error searching user:', error);
+                searchResult.className = 'search-result show error';
+                searchResult.innerHTML = `
+                    <div class="search-result-message">
+                        <i class="fas fa-exclamation-triangle search-result-icon"></i>
+                        <span>Something went wrong! Please try again later.</span>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchUser();
+                }
+            });
+        });
 
         window.addEventListener('message', (event) => {
             if (event.data && event.data.users) {
