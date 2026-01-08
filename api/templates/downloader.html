@@ -361,7 +361,7 @@
             <div class="results" id="results"></div>
         </div>
     </div>
-    <div class="copyright">© Copyright 2025 GalihMrd.</div>
+    <div class="copyright">© Copyright 2026 TikMedia.</div>
 
     <script>
         let currentData = null;
@@ -385,7 +385,7 @@
             downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
             try {
-                const response = await fetch(`/api?url=${encodeURIComponent(url)}`);
+                const response = await fetch(`/api/dl?url=${encodeURIComponent(url)}`);
                 const data = await response.json();
                 
                 if (data.data) {
