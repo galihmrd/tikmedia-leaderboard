@@ -109,7 +109,7 @@ def dl_web():
     return render_template("downloader.html")
 
 dl_api = Blueprint("dl_api", __name__)
-@dl_api_.route('/api/dl')
+@dl_api.route('/api/dl')
 def dl_api_():
     url = request.args.get("url")
     if url:
