@@ -635,9 +635,20 @@
             
             if (headerBackground && headerBackground.classList.contains('active')) {
                 mainVideos.forEach(video => {
-                    if (video && !video.paused) {
+                    if (video) {
                         try {
-                            headerBackground.currentTime = video.currentTime;
+                            // Sync time with tolerance of 0.3 seconds
+                            const timeDiff = Math.abs(headerBackground.currentTime - video.currentTime);
+                            if (timeDiff > 0.3) {
+                                headerBackground.currentTime = video.currentTime;
+                            }
+                            
+                            // Sync play state
+                            if (!video.paused && headerBackground.paused) {
+                                headerBackground.play().catch(e => console.log('Sync play failed:', e));
+                            } else if (video.paused && !headerBackground.paused) {
+                                headerBackground.pause();
+                            }
                         } catch (e) {
                             console.log('Sync error:', e);
                         }
@@ -792,8 +803,17 @@
         function handleMainVideoPlay(video) {
             const headerBackground = document.getElementById('headerBackground');
             if (headerBackground && headerBackground.classList.contains('active')) {
+                // Sync time first
                 headerBackground.currentTime = video.currentTime;
+                // Then play
                 headerBackground.play().catch(e => console.log('Background video play failed:', e));
+                
+                // Pause other main videos
+                mainVideos.forEach(v => {
+                    if (v !== video && !v.paused) {
+                        v.pause();
+                    }
+                });
             }
         }
 
@@ -808,11 +828,16 @@
             const headerBackground = document.getElementById('headerBackground');
             if (headerBackground && headerBackground.classList.contains('active')) {
                 headerBackground.currentTime = video.currentTime;
+                
+                // If video is playing, ensure background is also playing
+                if (!video.paused) {
+                    headerBackground.play().catch(e => console.log('Background video play after seek failed:', e));
+                }
             }
         }
 
-        // Sync videos periodically
-        setInterval(syncVideos, 100);
+        // Sync videos periodically with higher frequency
+        setInterval(syncVideos, 50);
 
         function showError(message) {
             const results = document.getElementById('results');
