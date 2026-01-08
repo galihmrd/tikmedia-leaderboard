@@ -14,191 +14,162 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 50%, #e3f2fd 100%);
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
             min-height: 100vh;
-            padding: 40px 20px;
-            position: relative;
-            overflow-x: hidden;
+            padding: 0;
+            color: #323130;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(33, 150, 243, 0.03) 0%, transparent 70%);
-            animation: rotate-gradient 30s linear infinite;
-            pointer-events: none;
+        .top-bar {
+            background: #0078d4;
+            color: white;
+            padding: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        @keyframes rotate-gradient {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .top-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            color: #0078d4;
+            font-weight: 700;
+        }
+
+        .company-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
+            padding: 40px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-            padding: 40px 20px;
+        .page-header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #0078d4;
         }
 
-        .api-monitor-btn {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            padding: 16px 28px;
-            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        .page-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #323130;
+            margin-bottom: 8px;
+            font-family: Georgia, 'Times New Roman', serif;
             display: flex;
             align-items: center;
-            gap: 10px;
-            z-index: 1000;
+            gap: 15px;
         }
 
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            background: #4caf50;
-            border-radius: 50%;
-            animation: blink 1.5s ease-in-out infinite;
-            box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+        .page-title i {
+            color: #0078d4;
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .page-subtitle {
+            font-size: 1.1em;
+            color: #605e5c;
+            font-weight: 400;
         }
 
-        .api-monitor-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.5);
-            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-        }
 
-        .api-monitor-btn:active {
-            transform: translateY(-2px);
-        }
 
-        .api-monitor-btn i {
-            font-size: 1.2em;
-        }
 
-        .header h1 {
-            font-size: 3.5em;
-            margin-bottom: 12px;
-            font-weight: 900;
-            letter-spacing: -2px;
-            background: linear-gradient(135deg, #1565c0 0%, #2196f3 50%, #64b5f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 4px 20px rgba(33, 150, 243, 0.1);
-        }
 
-        .header h1 i {
-            color: #2196f3;
-            -webkit-text-fill-color: #2196f3;
-            margin-right: 16px;
-            filter: drop-shadow(0 4px 12px rgba(33, 150, 243, 0.3));
-        }
-
-        .header p {
-            font-size: 1.3em;
-            color: #1976d2;
-            font-weight: 600;
-            letter-spacing: 1px;
-            opacity: 0.8;
-        }
-
-        .content {
+        .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             margin-bottom: 40px;
         }
 
-        .section {
-            background: transparent;
-            padding: 0;
-        }
-
-        .section-title {
-            color: #1565c0;
-            margin-bottom: 32px;
-            font-size: 1.8em;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            padding-bottom: 16px;
-            border-bottom: 3px solid #2196f3;
+        .section-header {
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 30px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #0078d4;
         }
 
-        .section-title i {
-            color: #2196f3;
-            font-size: 0.9em;
+        .section-icon {
+            color: #0078d4;
+            font-size: 1.5em;
+        }
+
+        .section-title {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #323130;
+            font-family: Georgia, 'Times New Roman', serif;
         }
 
         .leaderboard-item {
             display: flex;
             align-items: center;
-            padding: 24px 28px;
-            margin-bottom: 16px;
-            background: #ffffff;
-            border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid transparent;
-            box-shadow: 0 2px 12px rgba(33, 150, 243, 0.08);
+            padding: 20px;
+            margin-bottom: 12px;
+            background: #faf9f8;
+            border-left: 3px solid #edebe9;
+            transition: all 0.2s ease;
         }
 
         .leaderboard-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(33, 150, 243, 0.15);
-            border-color: #2196f3;
+            background: #f3f2f1;
+            border-left-color: #0078d4;
+            transform: translateX(4px);
         }
 
         .leaderboard-item.top3 {
-            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
-            border: 2px solid #2196f3;
-            box-shadow: 0 4px 20px rgba(33, 150, 243, 0.15);
+            background: #fff4ce;
+            border-left-color: #ffb900;
         }
 
         .leaderboard-item.top3:hover {
-            box-shadow: 0 12px 32px rgba(33, 150, 243, 0.25);
-            transform: translateY(-6px) scale(1.01);
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            background: #ffec99;
         }
 
         .rank {
-            font-size: 2.2em;
-            font-weight: 900;
-            margin-right: 24px;
-            min-width: 60px;
-            color: #1565c0;
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-right: 20px;
+            min-width: 50px;
+            color: #323130;
         }
 
         .user-info {
@@ -206,24 +177,20 @@
         }
 
         .user-name {
-            font-weight: 700;
-            font-size: 1.15em;
-            margin-bottom: 6px;
-            letter-spacing: -0.3px;
-            color: #0d47a1;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 4px;
+            color: #323130;
         }
 
         .user-name i {
-            color: #2196f3;
-            margin-right: 8px;
-            font-size: 0.9em;
+            color: #0078d4;
+            margin-right: 6px;
         }
 
         .user-id {
-            font-size: 0.9em;
-            color: #1976d2;
-            opacity: 0.7;
-            font-weight: 500;
+            font-size: 0.85em;
+            color: #605e5c;
         }
 
         .stats {
@@ -232,44 +199,24 @@
 
         .downloads {
             font-size: 1.2em;
-            font-weight: 800;
-            color: #1565c0;
+            font-weight: 600;
+            color: #0078d4;
             margin-bottom: 4px;
         }
 
         .downloads i {
-            color: #2196f3;
-            margin-right: 6px;
+            margin-right: 5px;
         }
 
         .timestamp {
             font-size: 0.8em;
-            color: #1976d2;
-            opacity: 0.7;
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .timestamp i {
-            margin-right: 4px;
-        }
-
-        .chart-wrapper {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 2px 12px rgba(33, 150, 243, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .chart-wrapper:hover {
-            box-shadow: 0 8px 24px rgba(33, 150, 243, 0.15);
-            transform: translateY(-2px);
+            color: #605e5c;
         }
 
         .chart-container {
             position: relative;
             height: 380px;
+            margin-top: 20px;
         }
 
         .full-width {
@@ -282,7 +229,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -298,12 +245,12 @@
         }
 
         .loader {
-            width: 70px;
-            height: 70px;
-            border: 5px solid rgba(33, 150, 243, 0.1);
-            border-top: 5px solid #2196f3;
+            width: 60px;
+            height: 60px;
+            border: 4px solid #edebe9;
+            border-top: 4px solid #0078d4;
             border-radius: 50%;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
@@ -312,35 +259,41 @@
         }
 
         .loading-text {
-            color: #1565c0;
-            margin-top: 24px;
-            font-size: 1.3em;
-            font-weight: 700;
-            letter-spacing: 1px;
+            color: #323130;
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
         }
 
-        @media (max-width: 768px) {
-            .content {
+        .footer {
+            background: #f3f2f1;
+            padding: 30px 40px;
+            text-align: center;
+            margin-top: 60px;
+            border-top: 1px solid #edebe9;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            color: #605e5c;
+            font-size: 0.9em;
+        }
+
+                    @media (max-width: 768px) {
+            .content-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .header h1 {
-                font-size: 2.2em;
+
+            .contact-info {
+                display: none;
             }
 
-            .header p {
-                font-size: 1em;
-            }
-
-            .section-title {
-                font-size: 1.4em;
-            }
-
-            .api-monitor-btn {
-                bottom: 20px;
-                right: 20px;
-                padding: 14px 24px;
-                font-size: 0.9em;
+            .page-title {
+                font-size: 1.8em;
             }
         }
     </style>
@@ -351,41 +304,65 @@
         <div class="loading-text">Loading...</div>
     </div>
 
-    <button class="api-monitor-btn" onclick="window.location.href='/downloader/uptime'">
-        <span class="status-dot"></span>
-        <i class="fas fa-server"></i>
-        API Monitor
-    </button>
-    
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="company-info">
+                <div class="company-logo">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="company-name">TikMedia Analytics</div>
+            </div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>contact@tikmedia.com</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+62 123 4567</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-crown"></i>TOP 10 TikMedia USERS 2026</h1>
-            <p>Most Active Users Leaderboard</p>
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-trophy"></i> Top 10 Users 2026</h1>
+            <p class="page-subtitle">Most Active Users Performance Dashboard</p>
         </div>
 
-        <div class="content">
-            <div class="section">
-                <h2 class="section-title"><i class="fas fa-trophy"></i>Leaderboard</h2>
+
+
+        <div class="content-grid">
+            <div>
                 <div id="leaderboard"></div>
             </div>
 
-            <div class="section">
-                <h2 class="section-title"><i class="fas fa-chart-bar"></i>Chart Downloads</h2>
-                <div class="chart-wrapper">
-                    <div class="chart-container">
-                        <canvas id="downloadsChart"></canvas>
-                    </div>
+            <div>
+                <div class="section-header">
+                    <i class="fas fa-chart-bar section-icon"></i>
+                    <h2 class="section-title">Download Statistics</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="downloadsChart"></canvas>
                 </div>
             </div>
+        </div>
 
-            <div class="section full-width">
-                <h2 class="section-title"><i class="fas fa-chart-line"></i>Timeline Activity</h2>
-                <div class="chart-wrapper">
-                    <div class="chart-container">
-                        <canvas id="timelineChart"></canvas>
-                    </div>
-                </div>
+        <div class="full-width">
+            <div class="section-header">
+                <i class="fas fa-chart-line section-icon"></i>
+                <h2 class="section-title">Activity Timeline</h2>
             </div>
+            <div class="chart-container">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 TikMedia Analytics. All rights reserved.</p>
         </div>
     </div>
 
@@ -474,6 +451,8 @@
                     </div>
                 </div>
             `).join('');
+
+
         }
 
         function createDownloadsChart(data) {
@@ -491,11 +470,11 @@
                         label: 'Downloads',
                         data: data.map(u => u.downloads),
                         backgroundColor: data.map((u, i) => 
-                            i < 3 ? 'rgba(33, 150, 243, 0.8)' : 'rgba(33, 150, 243, 0.5)'
+                            i < 3 ? 'rgba(0, 120, 212, 0.8)' : 'rgba(0, 120, 212, 0.5)'
                         ),
-                        borderColor: '#2196f3',
+                        borderColor: '#0078d4',
                         borderWidth: 0,
-                        borderRadius: 8,
+                        borderRadius: 4,
                     }]
                 },
                 options: {
@@ -505,9 +484,9 @@
                         legend: { display: false },
                         title: {
                             display: true,
-                            text: 'Download Count by User',
-                            color: '#1565c0',
-                            font: { size: 16, weight: '700' }
+                            text: 'User Performance',
+                            color: '#323130',
+                            font: { size: 16, weight: '600' }
                         }
                     },
                     scales: {
@@ -515,15 +494,15 @@
                             beginAtZero: true,
                             ticks: { 
                                 stepSize: 20,
-                                color: '#1976d2'
+                                color: '#605e5c'
                             },
                             grid: {
-                                color: 'rgba(33, 150, 243, 0.08)'
+                                color: 'rgba(0,0,0,0.05)'
                             }
                         },
                         x: {
                             ticks: {
-                                color: '#1976d2'
+                                color: '#605e5c'
                             },
                             grid: {
                                 display: false
@@ -552,13 +531,13 @@
                     datasets: [{
                         label: 'Downloads Over Time',
                         data: sortedByTime.map(u => u.downloads),
-                        borderColor: '#2196f3',
-                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        borderColor: '#0078d4',
+                        backgroundColor: 'rgba(0, 120, 212, 0.1)',
                         tension: 0.4,
                         fill: true,
                         pointRadius: 5,
                         pointHoverRadius: 8,
-                        pointBackgroundColor: '#2196f3',
+                        pointBackgroundColor: '#0078d4',
                         pointBorderColor: '#ffffff',
                         pointBorderWidth: 2,
                         borderWidth: 3
@@ -571,9 +550,9 @@
                         legend: { display: false },
                         title: {
                             display: true,
-                            text: 'Activity Timeline',
-                            color: '#1565c0',
-                            font: { size: 16, weight: '700' }
+                            text: 'Activity Over Time',
+                            color: '#323130',
+                            font: { size: 16, weight: '600' }
                         }
                     },
                     scales: {
@@ -581,18 +560,18 @@
                             beginAtZero: true,
                             ticks: { 
                                 stepSize: 20,
-                                color: '#1976d2'
+                                color: '#605e5c'
                             },
                             grid: {
-                                color: 'rgba(33, 150, 243, 0.08)'
+                                color: 'rgba(0,0,0,0.05)'
                             }
                         },
                         x: {
                             ticks: {
-                                color: '#1976d2'
+                                color: '#605e5c'
                             },
                             grid: {
-                                color: 'rgba(33, 150, 243, 0.08)'
+                                color: 'rgba(0,0,0,0.05)'
                             }
                         }
                     }
