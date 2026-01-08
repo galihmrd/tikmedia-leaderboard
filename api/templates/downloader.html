@@ -24,7 +24,7 @@
         }
         
         .header {
-            background: rgba(0, 0, 0, 0.5);
+            background: #0078d4;
             color: white;
             padding: 60px 40px;
             position: relative;
@@ -572,6 +572,7 @@
         let currentInputUrl = '';
         let backgroundAudio = null;
         let isAudioPlaying = false;
+        let mainVideos = [];
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const videoUrl = urlParams.get('url');
@@ -629,8 +630,25 @@
             }
         }
 
+        function syncVideos() {
+            const headerBackground = document.getElementById('headerBackground');
+            
+            if (headerBackground && headerBackground.classList.contains('active')) {
+                mainVideos.forEach(video => {
+                    if (video && !video.paused) {
+                        try {
+                            headerBackground.currentTime = video.currentTime;
+                        } catch (e) {
+                            console.log('Sync error:', e);
+                        }
+                    }
+                });
+            }
+        }
+
         function displayResults(data) {
             const results = document.getElementById('results');
+            mainVideos = [];
             
             // Check if all media are images and has audio_url
             let hasAudio = false;
@@ -658,6 +676,7 @@
                 const headerBackground = document.getElementById('headerBackground');
                 const headerBackgroundImg = document.getElementById('headerBackgroundImg');
                 const headerOverlay = document.getElementById('headerOverlay');
+                const header = document.getElementById('header');
                 
                 // Reset both elements first
                 headerBackground.classList.remove('active');
@@ -672,13 +691,26 @@
                         headerBackground.load();
                         headerBackground.play().catch(e => console.log('Video autoplay failed:', e));
                         headerBackground.classList.add('active');
+                        header.style.background = 'rgba(0, 0, 0, 0.5)';
                     } else {
                         headerBackgroundImg.src = firstMedia;
                         headerBackgroundImg.classList.add('active');
+                        header.style.background = 'rgba(0, 0, 0, 0.5)';
                     }
                     
                     headerOverlay.classList.add('active');
                 }, 100);
+            } else {
+                // Reset to blue Microsoft background if no media
+                const header = document.getElementById('header');
+                const headerBackground = document.getElementById('headerBackground');
+                const headerBackgroundImg = document.getElementById('headerBackgroundImg');
+                const headerOverlay = document.getElementById('headerOverlay');
+                
+                headerBackground.classList.remove('active');
+                headerBackgroundImg.classList.remove('active');
+                headerOverlay.classList.remove('active');
+                header.style.background = '#0078d4';
             }
             
             // Get platform icon
@@ -700,8 +732,9 @@
             if (data.url && Array.isArray(data.url)) {
                 data.url.forEach((mediaUrl, index) => {
                     const isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
+                    const videoId = `mainVideo_${index}`;
                     const mediaElement = isVideo ? 
-                        `<video controls loop class="media-preview">
+                        `<video id="${videoId}" controls loop class="media-preview" onplay="handleMainVideoPlay(this)" onpause="handleMainVideoPause(this)" onseeked="handleMainVideoSeeked(this)">
                             <source src="${mediaUrl}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>` :
@@ -739,7 +772,47 @@
             `;
             
             results.style.display = 'block';
+            
+            // Store reference to main videos
+            setTimeout(() => {
+                if (data.url && Array.isArray(data.url)) {
+                    data.url.forEach((mediaUrl, index) => {
+                        const isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
+                        if (isVideo) {
+                            const video = document.getElementById(`mainVideo_${index}`);
+                            if (video) {
+                                mainVideos.push(video);
+                            }
+                        }
+                    });
+                }
+            }, 100);
         }
+
+        function handleMainVideoPlay(video) {
+            const headerBackground = document.getElementById('headerBackground');
+            if (headerBackground && headerBackground.classList.contains('active')) {
+                headerBackground.currentTime = video.currentTime;
+                headerBackground.play().catch(e => console.log('Background video play failed:', e));
+            }
+        }
+
+        function handleMainVideoPause(video) {
+            const headerBackground = document.getElementById('headerBackground');
+            if (headerBackground && headerBackground.classList.contains('active')) {
+                headerBackground.pause();
+            }
+        }
+
+        function handleMainVideoSeeked(video) {
+            const headerBackground = document.getElementById('headerBackground');
+            if (headerBackground && headerBackground.classList.contains('active')) {
+                headerBackground.currentTime = video.currentTime;
+            }
+        }
+
+        // Sync videos periodically
+        setInterval(syncVideos, 100);
 
         function showError(message) {
             const results = document.getElementById('results');
@@ -750,6 +823,17 @@
                 </div>
             `;
             results.style.display = 'block';
+            
+            // Reset header background to blue
+            const header = document.getElementById('header');
+            const headerBackground = document.getElementById('headerBackground');
+            const headerBackgroundImg = document.getElementById('headerBackgroundImg');
+            const headerOverlay = document.getElementById('headerOverlay');
+            
+            headerBackground.classList.remove('active');
+            headerBackgroundImg.classList.remove('active');
+            headerOverlay.classList.remove('active');
+            header.style.background = '#0078d4';
         }
 
         async function directDownload(url, filename) {
