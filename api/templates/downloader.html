@@ -365,10 +365,14 @@
 
     <script>
         let currentData = null;
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const videoUrl = urlParams.get('url');
 
         async function fetchMedia() {
             const urlInput = document.getElementById('urlInput');
-            const url = urlInput.value.trim();        
+            const trimUrl = urlInput.value.trim();
+            const url = trimUrl || videoUrl
     
             if (!url) {
                 showError('Please enter a valid URL');
