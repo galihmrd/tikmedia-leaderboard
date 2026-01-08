@@ -110,7 +110,7 @@ def dl_web():
 
 dl_api = Blueprint("dl_api", __name__)
 @dl_api_.route('/api/dl')
-def dl_api():
+def dl_api_():
     url = request.args.get("url")
     if url:
         response = requests.get(
