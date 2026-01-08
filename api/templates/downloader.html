@@ -565,7 +565,8 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tele = window.Telegram.WebApp;
-        tele.ready();
+        const startParam = tele.initDataUnsafe.start_param;
+        
         
         let currentData = null;
         let currentInputUrl = '';
@@ -574,19 +575,12 @@
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const videoUrl = urlParams.get('url');
-        
-        function getQueryParam(param) {
-            const params = new URLSearchParams(window.location.search);
-            return params.get(param);
-        }
 
-        const paramsTele = getQueryParam('url');
-        
         if (videoUrl) {
             document.querySelector('.input-section').style.display = 'none';
             document.getElementById('urlInput').value = videoUrl;
             fetchMedia();
-        } else if (paramsTele) {
+        } else if (startParam) {
             document.querySelector('.input-section').style.display = 'none';
             fetchMedia();
         }
@@ -594,7 +588,7 @@
         async function fetchMedia() {
             const urlInput = document.getElementById('urlInput');
             const trimUrl = urlInput.value.trim();
-            const url = trimUrl || videoUrl || paramsTele
+            const url = trimUrl || videoUrl || startParam
     
             if (!url) {
                 showError('Please enter a valid URL');
