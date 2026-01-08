@@ -368,6 +368,9 @@
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const videoUrl = urlParams.get('url');
+        if (videoUrl) {
+            fetchMedia();
+        }
 
         async function fetchMedia() {
             const urlInput = document.getElementById('urlInput');
