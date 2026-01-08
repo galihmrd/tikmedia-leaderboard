@@ -204,6 +204,36 @@
             gap: 10px;
         }
 
+        /* Platform-specific colors */
+        .platform-badge.instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+        .platform-badge.tiktok {
+            background: #000000;
+            border: 2px solid #fe2c55;
+        }
+
+        .platform-badge.twitter {
+            background: #1DA1F2;
+        }
+
+        .platform-badge.x {
+            background: #000000;
+        }
+
+        .platform-badge.youtube {
+            background: #FF0000;
+        }
+
+        .platform-badge.facebook {
+            background: #1877F2;
+        }
+
+        .platform-badge.threads {
+            background: #000000;
+        }
+
         .platform-badge i {
             font-size: 1.3rem;
         }
@@ -306,6 +336,127 @@
             font-size: 1.1rem;
         }
 
+        .share-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: none;
+        }
+
+        .share-btn:hover {
+            background: #005a9e;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 120, 212, 0.5);
+        }
+
+        .share-btn:active {
+            transform: scale(0.95);
+        }
+
+        .share-btn.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .share-btn.copied {
+            background: #107c10;
+        }
+
+        .share-btn.copied i {
+            transform: rotate(360deg);
+        }
+
+        .share-tooltip {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #323130;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1001;
+            white-space: nowrap;
+        }
+
+        .share-tooltip.show {
+            opacity: 1;
+        }
+
+        .audio-player {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: white;
+            border: 2px solid #0078d4;
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+        }
+
+        .audio-player.show {
+            display: flex;
+        }
+
+        .audio-player-btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: background 0.2s ease;
+        }
+
+        .audio-player-btn:hover {
+            background: #005a9e;
+        }
+
+        .audio-player-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .audio-player-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #323130;
+        }
+
+        .audio-player-status {
+            font-size: 0.75rem;
+            color: #605e5c;
+        }
+
         @media (max-width: 768px) {
             .input-group {
                 flex-direction: column;
@@ -326,6 +477,31 @@
             .media-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
+            }
+
+            .share-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+                font-size: 1.3rem;
+            }
+
+            .share-tooltip {
+                bottom: 86px;
+                right: 20px;
+            }
+
+            .audio-player {
+                bottom: 86px;
+                right: 20px;
+                padding: 10px 16px;
+            }
+
+            .audio-player-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -363,12 +539,32 @@
     </div>
     <div class="copyright">© Copyright 2026 TikMedia.</div>
 
+    <button class="share-btn" id="shareBtn" onclick="shareUrl()">
+        <i class="fas fa-copy"></i>
+    </button>
+    <div class="share-tooltip" id="shareTooltip">Link copied!</div>
+
+    <div class="audio-player" id="audioPlayer">
+        <button class="audio-player-btn" id="audioToggle" onclick="toggleAudio()">
+            <i class="fas fa-play"></i>
+        </button>
+        <div class="audio-player-info">
+            <div class="audio-player-title">Background Audio</div>
+            <div class="audio-player-status" id="audioStatus">Ready to play</div>
+        </div>
+    </div>
+    <audio id="backgroundAudio" loop></audio>
+
     <script>
         let currentData = null;
+        let currentInputUrl = '';
+        let backgroundAudio = null;
+        let isAudioPlaying = false;
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const videoUrl = urlParams.get('url');
         if (videoUrl) {
+            document.getElementById('urlInput').value = videoUrl;
             fetchMedia();
         }
 
@@ -382,14 +578,21 @@
                 return;
             }
 
+            currentInputUrl = url;
+
             const loading = document.getElementById('loading');
             const results = document.getElementById('results');
             const downloadBtn = document.getElementById('downloadBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            const audioPlayer = document.getElementById('audioPlayer');
             
             loading.style.display = 'block';
             results.style.display = 'none';
             downloadBtn.disabled = true;
             downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            shareBtn.classList.remove('show');
+            audioPlayer.classList.remove('show');
+            stopAudio();
 
             try {
                 const response = await fetch(`/api/dl?url=${encodeURIComponent(url)}`);
@@ -398,6 +601,7 @@
                 if (data.data) {
                     currentData = data.data;
                     displayResults(data.data);
+                    document.getElementById('shareBtn').classList.add('show');
                 } else {
                     showError('Failed to fetch media data');
                 }
@@ -413,6 +617,24 @@
 
         function displayResults(data) {
             const results = document.getElementById('results');
+            
+            // Check if all media are images and has audio_url
+            let hasAudio = false;
+            let allImages = true;
+            
+            if (data.url && Array.isArray(data.url) && data.url.length > 0) {
+                // Check if all are images
+                allImages = data.url.every(mediaUrl => {
+                    const isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
+                    return !isVideo;
+                });
+                
+                // Check if has audio_url
+                if (allImages && data.audio_url) {
+                    hasAudio = true;
+                    setupBackgroundAudio(data.audio_url);
+                }
+            }
             
             // Set header background to first media
             if (data.url && Array.isArray(data.url) && data.url.length > 0) {
@@ -457,6 +679,7 @@
             };
             
             const platformIcon = platformIcons[data.platform?.toLowerCase()] || 'fas fa-photo-video';
+            const platformClass = data.platform?.toLowerCase() || '';
             
             let mediaHtml = '';
             
@@ -485,7 +708,7 @@
 
             results.innerHTML = `
                 <div class="result-header">
-                    <div class="platform-badge">
+                    <div class="platform-badge ${platformClass}">
                         <i class="${platformIcon}"></i>
                         <span>${data.platform ? data.platform.toUpperCase() : 'MEDIA'}</span>
                     </div>
@@ -575,6 +798,88 @@
                 fetchMedia();
             }
         });
+
+        function shareUrl() {
+            if (!currentInputUrl) {
+                return;
+            }
+
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareUrl = `${baseUrl}?url=${encodeURIComponent(currentInputUrl)}`;
+            
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                const shareBtn = document.getElementById('shareBtn');
+                const tooltip = document.getElementById('shareTooltip');
+                
+                shareBtn.classList.add('copied');
+                shareBtn.innerHTML = '<i class="fas fa-check"></i>';
+                tooltip.classList.add('show');
+                
+                setTimeout(() => {
+                    shareBtn.classList.remove('copied');
+                    shareBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    tooltip.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy link. Please try again.');
+            });
+        }
+
+        function setupBackgroundAudio(audioUrl) {
+            backgroundAudio = document.getElementById('backgroundAudio');
+            backgroundAudio.src = audioUrl;
+            
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.classList.add('show');
+            
+            // Auto play
+            backgroundAudio.play().then(() => {
+                isAudioPlaying = true;
+                updateAudioButton();
+            }).catch(err => {
+                console.log('Autoplay prevented:', err);
+                updateAudioStatus('Click to play');
+            });
+        }
+
+        function toggleAudio() {
+            if (!backgroundAudio) return;
+            
+            if (isAudioPlaying) {
+                backgroundAudio.pause();
+                isAudioPlaying = false;
+            } else {
+                backgroundAudio.play();
+                isAudioPlaying = true;
+            }
+            updateAudioButton();
+        }
+
+        function stopAudio() {
+            if (backgroundAudio) {
+                backgroundAudio.pause();
+                backgroundAudio.currentTime = 0;
+                isAudioPlaying = false;
+                updateAudioButton();
+            }
+        }
+
+        function updateAudioButton() {
+            const audioToggle = document.getElementById('audioToggle');
+            if (isAudioPlaying) {
+                audioToggle.innerHTML = '<i class="fas fa-pause"></i>';
+                updateAudioStatus('Playing...');
+            } else {
+                audioToggle.innerHTML = '<i class="fas fa-play"></i>';
+                updateAudioStatus('Paused');
+            }
+        }
+
+        function updateAudioStatus(status) {
+            const audioStatus = document.getElementById('audioStatus');
+            audioStatus.textContent = status;
+        }
     </script>
 </body>
 </html>
