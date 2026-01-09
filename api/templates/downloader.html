@@ -636,12 +636,14 @@
         let backgroundAudio = null;
         let isAudioPlaying = false;
         let mainVideos = [];
-        const urlRoute = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlRoute = urlParams.get("url");
 
         if (isTelegram.id) {
             document.querySelector('.share-btn').style.display = 'none';
         }
         if (startParam || urlRoute) {
+            showError(urlRoute)
             document.querySelector('.input-section').style.display = 'none';
             if (startParam) {
                 document.querySelector('.share-btn').style.display = 'none';
