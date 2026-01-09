@@ -640,7 +640,7 @@
         let urlRoute = urlParams.get("url");
         
         if (!urlRoute.toLowerCase().startsWith("http")) {
-            urlRoute = atob(urlRoute);
+            urlRoute = atob(urlRoute) || startParam;
         }
 
         if (isTelegram) {
