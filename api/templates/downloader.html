@@ -641,11 +641,13 @@
         let isAudioPlaying = false;
         let mainVideos = [];
 
-        if (isTelegram.id) {
+        if (startParam) {
+            document.querySelector('.input-section').style.display = 'none';
             document.querySelector('.share-btn').style.display = 'none';
+            fetchMedia();
         }
         
-        if (vidUrl || startParam) {
+        if (vidUrl) {
             document.querySelector('.input-section').style.display = 'none';
             fetchMedia();
         }
