@@ -30,6 +30,57 @@
             position: relative;
             overflow: hidden;
         }
+        .top-bar {
+            background: #0078d4;
+            color: white;
+            padding: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .top-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            border: none;
+            gap: 8px;
+            padding: 10px 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.2s;
+            background: #004578;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: #004578;
+            font-weight: 600;
+        }
+
+        .nav-link i {
+            font-size: 1em;
+        }
 
         .header-background {
             position: absolute;
@@ -519,6 +570,21 @@
     </style>
 </head>
 <body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <nav class="nav-menu">
+                <button onclick="goToDestination('/downloader')" class="nav-link active">
+                    <i class="fas fa-trophy"></i>
+                </button>
+                <button onclick="goToDestination('/')" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                </button>
+                <button onclick="goToDestination('/downloader/uptime')" class="nav-link">
+                    <i class="fas fa-clock"></i>
+                </button>
+            </nav>
+        </div>
+    </div>
     <div class="container">
         <div class="header" id="header">
             <video class="header-background" id="headerBackground" autoplay muted loop playsinline></video>
@@ -580,6 +646,10 @@
 
         if (isTelegram.id) {
             document.querySelector('.share-btn').style.display = 'none';
+        }
+        
+        function goToDestination(destinationUrl) {
+            window.location.href = destinationUrl;
         }
 
         if (videoUrl || startParam) {
