@@ -629,7 +629,7 @@
     <script>
         const tele = window.Telegram.WebApp;
         const startParam = tele.initDataUnsafe.start_param || null;
-        const isTelegram = tele.initDataUnsafe?.user
+        const isTelegram = tele.initDataUnsafe?.user?.id
         
         let currentData = null;
         let currentInputUrl = '';
@@ -639,11 +639,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         const urlRoute = urlParams.get("url");
 
-        if (isTelegram.id) {
+        if (isTelegram) {
             document.querySelector('.share-btn').style.display = 'none';
         }
         if (startParam || urlRoute) {
-            showError(urlRoute)
             document.querySelector('.input-section').style.display = 'none';
             if (startParam) {
                 document.querySelector('.share-btn').style.display = 'none';
