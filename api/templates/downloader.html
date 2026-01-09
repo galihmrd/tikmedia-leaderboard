@@ -636,20 +636,16 @@
         let backgroundAudio = null;
         let isAudioPlaying = false;
         let mainVideos = [];
-        const queryString = window.location.search;
-        const urlRoute = queryString.split("?url=")[1] || null;
+        const urlRoute = new URLSearchParams(window.location.search);
 
         if (isTelegram.id) {
             document.querySelector('.share-btn').style.display = 'none';
         }
-        if (startParam) {
+        if (startParam || urlRoute) {
             document.querySelector('.input-section').style.display = 'none';
-            document.querySelector('.share-btn').style.display = 'none';
-            fetchMedia();
-        }
-        if (urlRoute) {
-            document.getElementById('urlInput').value = urlRoute;
-            document.querySelector('.input-section').style.display = 'none';
+            if (startParam) {
+                document.querySelector('.share-btn').style.display = 'none';
+            }
             fetchMedia();
         }
 
