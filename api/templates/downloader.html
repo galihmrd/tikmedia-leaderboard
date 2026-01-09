@@ -659,10 +659,6 @@
             const inputForm = urlInput.value.trim();
             const url = inputForm || urlRoute || startParam;
 
-            if (urlInput) {
-                document.querySelector('.loading').style.display = 'none';
-            }
-
             if (!url) {
                 showError('Please enter a valid URL');
                 return;
@@ -918,7 +914,7 @@
             const results = document.getElementById('results');
             results.innerHTML = `
                 <div class="error">
-                    <h3>⚠ Error</h3>
+                    <i class="fa-solid fa-triangle-exclamation"></i><h3> Error</h3>
                     <p>${message}</p>
                 </div>
             `;
