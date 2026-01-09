@@ -627,6 +627,10 @@
     <audio id="backgroundAudio" loop></audio>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const vidUrl = urlParams.get('url');
+        
         const tele = window.Telegram.WebApp;
         const startParam = tele.initDataUnsafe.start_param || null;
         const isTelegram = tele.initDataUnsafe?.user
@@ -636,9 +640,6 @@
         let backgroundAudio = null;
         let isAudioPlaying = false;
         let mainVideos = [];
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const vidUrl = urlParams.get('url');
 
         if (isTelegram.id) {
             document.querySelector('.share-btn').style.display = 'none';
