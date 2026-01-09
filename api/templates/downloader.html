@@ -628,7 +628,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tele = window.Telegram.WebApp;
-        const startParam = tele.initDataUnsafe.start_param || null;
+        const startParam = tele.initDataUnsafe.start_param;
         const isTelegram = tele.initDataUnsafe?.user?.id
         
         let currentData = null;
@@ -639,10 +639,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         let urlRoute = urlParams.get("url");
         
-        if (!urlRoute.toLowerCase().startsWith("http")) {
-            urlRoute = atob(urlRoute) || startParam;
-        }
-
         if (isTelegram) {
             document.querySelector('.share-btn').style.display = 'none';
         }
