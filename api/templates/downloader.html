@@ -648,7 +648,7 @@
         }
         
         if (urlParam) {
-            const vidUrl = atob(urlParam);
+            let vidUrl = atob(urlParam);
             document.querySelector('.input-section').style.display = 'none';
             fetchMedia();
         }
