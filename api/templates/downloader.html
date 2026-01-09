@@ -629,7 +629,7 @@
     <script>
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        const vidUrl = atob(urlParams.get('url')) || null;
+        let urlParam = urlParams.get('url') || null;
         
         const tele = window.Telegram.WebApp;
         const startParam = tele.initDataUnsafe.start_param || null;
@@ -647,7 +647,8 @@
             fetchMedia();
         }
         
-        if (vidUrl) {
+        if (urlParam) {
+            const vidUrl = atob(urlParam);
             document.querySelector('.input-section').style.display = 'none';
             fetchMedia();
         }
