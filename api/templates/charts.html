@@ -539,10 +539,10 @@
                     <i class="fas fa-trophy"></i>
                     <span>Leaderboard</span>
                 </a>
-                <a href="/downloader" class="nav-link">
+                <button onclick="goToDestination('/downloader')" class="nav-link">
                     <i class="fas fa-download"></i>
                     <span>Downloader</span>
-                </a>
+                </button>
                 <a href="/downloader/uptime" class="nav-link">
                     <i class="fas fa-clock"></i>
                     <span>Uptime</span>
@@ -617,6 +617,11 @@
         const sampleData = {
             users: []
         };
+        
+        function goToDestination(destinationUrl) {
+            window.location.href = destinationUrl;
+        }
+        
 
         function showLoading() {
             document.getElementById('loadingOverlay').classList.remove('hidden');
