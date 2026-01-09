@@ -637,8 +637,7 @@
         let isAudioPlaying = false;
         let mainVideos = [];
         const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const urlRoute = urlParams.get('url');
+        const urlRoute = queryString.split("?url=")[1] || null;
 
         if (isTelegram.id) {
             document.querySelector('.share-btn').style.display = 'none';
