@@ -637,7 +637,11 @@
         let isAudioPlaying = false;
         let mainVideos = [];
         const urlParams = new URLSearchParams(window.location.search);
-        const urlRoute = urlParams.get("url");
+        let urlRoute = urlParams.get("url");
+        
+        if (!urlRoute.toLowerCase().startsWith("http")) {
+            const urlRoute = atob(urlRoute);
+        }
 
         if (isTelegram) {
             document.querySelector('.share-btn').style.display = 'none';
