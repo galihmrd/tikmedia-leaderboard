@@ -629,7 +629,7 @@
     <script>
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        let urlParam = urlParams.get('url') || null;
+        const urlParam = urlParams.get('url') || null;
         
         const tele = window.Telegram.WebApp;
         const startParam = tele.initDataUnsafe.start_param || null;
@@ -648,7 +648,6 @@
         }
         
         if (urlParam) {
-            let vidUrl = atob(urlParam);
             document.querySelector('.input-section').style.display = 'none';
             fetchMedia();
         }
@@ -659,7 +658,7 @@
         
         async function fetchMedia() {
             const urlInput = document.getElementById('urlInput');
-            const url = urlInput.value.trim() || vidUrl || startParam
+            const url = urlInput.value.trim() || urlParam || startParam
     
             if (!url) {
                 showError('Please enter a valid URL');
@@ -1000,7 +999,7 @@
             }
 
             const baseUrl = window.location.origin + window.location.pathname;
-            const shareUrl = `${baseUrl}?url=${btoa(currentInputUrl)}`;
+            const shareUrl = `${baseUrl}?url=${encodeURIComponent(currentInputUrl)}`;
             
             navigator.clipboard.writeText(shareUrl).then(() => {
                 const shareBtn = document.getElementById('shareBtn');
