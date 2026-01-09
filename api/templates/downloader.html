@@ -643,8 +643,9 @@
 
         if (isTelegram.id) {
             document.querySelector('.share-btn').style.display = 'none';
-        } else if (startParam) {
-            document.querySelector('.input-section').style.display = 'none';
+            if (startParam) {
+                document.querySelector('.input-section').style.display = 'none';
+            }
             fetchMedia();
         }
         if (urlParam) {
