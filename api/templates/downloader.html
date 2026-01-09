@@ -629,7 +629,7 @@
     <script>
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        const urlParam = urlParams.get('url') || null;
+        const urlRoute = urlParams.get('url');
         
         const tele = window.Telegram.WebApp;
         const startParam = tele.initDataUnsafe.start_param || null;
@@ -649,7 +649,7 @@
             document.querySelector('.share-btn').style.display = 'none';
             fetchMedia();
         }
-        if (urlParam) {
+        if (urlRoute) {
             document.querySelector('.input-section').style.display = 'none';
             fetchMedia();
         }
@@ -660,7 +660,7 @@
         
         async function fetchMedia() {
             const urlInput = document.getElementById('urlInput');
-            const url = urlInput.value.trim() || urlParam || startParam
+            const url = urlInput.value.trim() || urlRoute || startParam;
     
             if (!url) {
                 showError('Please enter a valid URL');
