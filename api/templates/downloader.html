@@ -640,7 +640,7 @@
         let urlRoute = urlParams.get("url");
         
         if (!urlRoute.toLowerCase().startsWith("http")) {
-            const urlRoute = atob(urlRoute);
+            urlRoute = atob(urlRoute);
         }
 
         if (isTelegram) {
@@ -1002,7 +1002,7 @@
             }
 
             const baseUrl = window.location.origin + window.location.pathname;
-            const shareUrl = `${baseUrl}?url=${encodeURIComponent(currentInputUrl)}`;
+            const shareUrl = `${baseUrl}?url=${btoa(currentInputUrl)}`;
             
             navigator.clipboard.writeText(shareUrl).then(() => {
                 const shareBtn = document.getElementById('shareBtn');
