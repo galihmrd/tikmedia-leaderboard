@@ -646,7 +646,6 @@
             document.querySelector('.input-section').style.display = 'none';
             if (startParam) {
                 document.querySelector('.share-btn').style.display = 'none';
-                document.querySelector('.direct-download-btn').style.display = 'none';
             }
             fetchMedia();
         }
@@ -659,7 +658,11 @@
             const urlInput = document.getElementById('urlInput');
             const inputForm = urlInput.value.trim();
             const url = inputForm || urlRoute || startParam;
-    
+
+            if (urlInput) {
+                document.querySelector('.loading').style.display = 'none';
+            }
+
             if (!url) {
                 showError('Please enter a valid URL');
                 return;
