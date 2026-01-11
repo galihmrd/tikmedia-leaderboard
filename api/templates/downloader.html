@@ -944,42 +944,48 @@
                 if (!response.ok) {
                     throw new Error('Download failed');
                 }
+                if (!isTelegram) {
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
                 
-                const blob = await response.blob();
-                const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = downloadUrl;
                 
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = downloadUrl;
-                
-                let extension = '';
-                const contentType = response.headers.get('content-type');
-                if (contentType) {
-                    if (contentType.includes('video')) {
-                        extension = '.mp4';
-                    } else if (contentType.includes('image/jpeg')) {
-                        extension = '.jpg';
-                    } else if (contentType.includes('image/png')) {
-                        extension = '.png';
-                    } else if (contentType.includes('image')) {
-                        extension = '.jpg';
-                    }
-                } else {
-                    const urlParts = url.split('.');
-                    if (urlParts.length > 1) {
-                        const lastPart = urlParts[urlParts.length - 1].split('?')[0];
-                        if (['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm'].includes(lastPart.toLowerCase())) {
-                            extension = '.' + lastPart.toLowerCase();
+                    let extension = '';
+                    const contentType = response.headers.get('content-type');
+                    if (contentType) {
+                        if (contentType.includes('video')) {
+                            extension = '.mp4';
+                        } else if (contentType.includes('image/jpeg')) {
+                            extension = '.jpg';
+                        } else if (contentType.includes('image/png')) {
+                            extension = '.png';
+                        } else if (contentType.includes('image')) {
+                            extension = '.jpg';
+                        }
+                    } else {
+                        const urlParts = url.split('.');
+                        if (urlParts.length > 1) {
+                            const lastPart = urlParts[urlParts.length - 1].split('?')[0];
+                            if (['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm'].includes(lastPart.toLowerCase())) {
+                                extension = '.' + lastPart.toLowerCase();
+                            }
                         }
                     }
+                
+                    a.download = filename + extension;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(downloadUrl);
+                } else {
+                    const contentType = response.headers.get('content-type');
+                    tele.downloadFile({
+                        url: 'https://yourserver.com/files/report.pdf',
+                        file_name: filename + "." + contentType.split("/")[1]
+                    })
                 }
-                
-                a.download = filename + extension;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(downloadUrl);
-                
             } catch (error) {
                 console.error('Download error:', error);
                 window.location.href = url;
