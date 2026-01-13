@@ -641,14 +641,17 @@
         
         if (isTelegram) {
             document.querySelector('.share-btn').style.display = 'none';
-            checkUserMember();
         }
         if (startParam || urlRoute) {
             document.querySelector('.input-section').style.display = 'none';
             if (startParam) {
                 document.querySelector('.share-btn').style.display = 'none';
             }
-            fetchMedia();
+            if (isTelegram) {
+                checkUserMember();
+            } else {
+                fetchMedia();
+            }
         }
 
         function goToDestination(destinationUrl) {
