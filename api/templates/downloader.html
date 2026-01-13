@@ -641,6 +641,7 @@
         
         if (isTelegram) {
             document.querySelector('.share-btn').style.display = 'none';
+            checkUserMember();
         }
         if (startParam || urlRoute) {
             document.querySelector('.input-section').style.display = 'none';
@@ -653,6 +654,16 @@
         function goToDestination(destinationUrl) {
             window.location.href = destinationUrl;
         }
+
+        async function checkUserMember() {
+            const response = await fetch(`/api/check-user-member?user_id=${isTelegram}`);
+            const userStatus = await response.json();
+            if (!userStatus['ok']) {
+                showError("Join our channel first!")
+                document.querySelector('.input-section').style.display = 'none';
+            } else {
+                fetchMedia()
+            }
         
         async function fetchMedia() {
             const urlInput = document.getElementById('urlInput');
