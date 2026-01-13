@@ -666,11 +666,11 @@
                 document.querySelector('.input-section').style.display = 'none';
             } else {
                 if (userStatus.result.status === "left") {
-                    showError("Join our channel first!")
                     document.querySelector('.input-section').style.display = 'none';
-                    return;
+                    showError("Join our channel first!");
+                } else {
+                    fetchMedia();
                 }
-                fetchMedia()
             }
         }
         
