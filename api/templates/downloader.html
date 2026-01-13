@@ -1012,21 +1012,11 @@
                     }, function(result) {
                         if (result) {
                             console.log('Download successful:', fullFilename);
-                            tele.showAlert('Download started: ' + fullFilename);
-                        } else {
-                            console.log('Download failed, opening in browser');
-                            tele.openLink(url);
                         }
                     });
                 }
             } catch (error) {
                 console.error('Download error:', error);
-                if (isTelegram) {
-                    // Fallback: open link in external browser
-                    tele.openLink(url);
-                } else {
-                    window.location.href = url;
-                }
             }
         }
 
