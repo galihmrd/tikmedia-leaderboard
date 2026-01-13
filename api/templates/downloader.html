@@ -661,10 +661,15 @@
         async function checkUserMember() {
             const response = await fetch(`/api/check-user-member?user_id=${isTelegram}`);
             const userStatus = await response.json();
-            if (!userStatus['ok']) {
+            if (!userStatus.ok) {
                 showError("Join our channel first!")
                 document.querySelector('.input-section').style.display = 'none';
             } else {
+                if (userStatus.result.status === "left") {
+                    showError("Join our channel first!")
+                    document.querySelector('.input-section').style.display = 'none';
+                    return;
+                }
                 fetchMedia()
             }
         }
