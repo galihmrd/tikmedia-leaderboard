@@ -688,8 +688,9 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const shareBtn = document.getElementById('shareBtn');
             const audioPlayer = document.getElementById('audioPlayer');
-            
-            loading.style.display = 'block';
+            if (!inputForm) {
+                loading.style.display = 'block';
+            }
             results.style.display = 'none';
             downloadBtn.disabled = true;
             downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
