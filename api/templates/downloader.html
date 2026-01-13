@@ -256,6 +256,7 @@
             gap: 10px;
         }
 
+        /* Platform-specific colors */
         .platform-badge.instagram {
             background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
             border-radius: 5px;
@@ -349,10 +350,6 @@
             object-fit: cover;
             background: #faf9f8;
             display: block;
-        }
-
-        .media-preview.loading {
-            background: #faf9f8 url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDA3OGQ0IiBzdHJva2Utd2lkdGg9IjMiPjxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9InN0cm9rZS1kYXNoYXJyYXkiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiB2YWx1ZXM9IjAgMTI1OzEwIDEyNTsxMCAxMjUiLz48YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJzdHJva2UtZGFzaG9mZnNldCIgZHVyPSIycyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIHZhbHVlcz0iMDsyNTA7MCIvPjwvY2lyY2xlPjwvc3ZnPg==') center center no-repeat;
         }
 
         .media-actions {
@@ -657,18 +654,6 @@
             window.location.href = destinationUrl;
         }
         
-        async function loadImageAsBlob(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Failed to load image');
-                const blob = await response.blob();
-                return URL.createObjectURL(blob);
-            } catch (error) {
-                console.error('Error loading image:', error);
-                return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDMwMCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjUwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1lZGlhIE5vdCBBdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPg==';
-            }
-        }
-        
         async function fetchMedia() {
             const urlInput = document.getElementById('urlInput');
             const inputForm = urlInput.value.trim();
@@ -723,11 +708,13 @@
                 mainVideos.forEach(video => {
                     if (video) {
                         try {
+                            // Sync time with tolerance of 0.3 seconds
                             const timeDiff = Math.abs(headerBackground.currentTime - video.currentTime);
                             if (timeDiff > 0.3) {
                                 headerBackground.currentTime = video.currentTime;
                             }
                             
+                            // Sync play state
                             if (!video.paused && headerBackground.paused) {
                                 headerBackground.play().catch(e => console.log('Sync play failed:', e));
                             } else if (video.paused && !headerBackground.paused) {
@@ -741,25 +728,29 @@
             }
         }
 
-        async function displayResults(data) {
+        function displayResults(data) {
             const results = document.getElementById('results');
             mainVideos = [];
             
+            // Check if all media are images and has audio_url
             let hasAudio = false;
             let allImages = true;
             
             if (data.url && Array.isArray(data.url) && data.url.length > 0) {
+                // Check if all are images
                 allImages = data.url.every(mediaUrl => {
                     const isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
                     return !isVideo;
                 });
                 
+                // Check if has audio_url
                 if (allImages && data.audio_url) {
                     hasAudio = true;
                     setupBackgroundAudio(data.audio_url);
                 }
             }
             
+            // Set header background to first media
             if (data.url && Array.isArray(data.url) && data.url.length > 0) {
                 const firstMedia = data.url[0];
                 const isVideo = firstMedia.includes('.mp4') || firstMedia.includes('video');
@@ -769,13 +760,14 @@
                 const headerOverlay = document.getElementById('headerOverlay');
                 const header = document.getElementById('header');
                 
+                // Reset both elements first
                 headerBackground.classList.remove('active');
                 headerBackgroundImg.classList.remove('active');
                 headerBackground.pause();
                 headerBackground.src = '';
                 headerBackgroundImg.src = '';
                 
-                setTimeout(async () => {
+                setTimeout(() => {
                     if (isVideo) {
                         headerBackground.src = firstMedia;
                         headerBackground.load();
@@ -783,8 +775,7 @@
                         headerBackground.classList.add('active');
                         header.style.background = 'rgba(0, 0, 0, 0.5)';
                     } else {
-                        const blobUrl = await loadImageAsBlob(firstMedia);
-                        headerBackgroundImg.src = blobUrl;
+                        headerBackgroundImg.src = firstMedia;
                         headerBackgroundImg.classList.add('active');
                         header.style.background = 'rgba(0, 0, 0, 0.5)';
                     }
@@ -792,6 +783,7 @@
                     headerOverlay.classList.add('active');
                 }, 100);
             } else {
+                // Reset to blue Microsoft background if no media
                 const header = document.getElementById('header');
                 const headerBackground = document.getElementById('headerBackground');
                 const headerBackgroundImg = document.getElementById('headerBackgroundImg');
@@ -803,6 +795,7 @@
                 header.style.background = '#0078d4';
             }
             
+            // Get platform icon
             const platformIcons = {
                 'instagram': 'fab fa-instagram',
                 'tiktok': 'fab fa-tiktok',
@@ -819,21 +812,15 @@
             let mediaHtml = '';
             
             if (data.url && Array.isArray(data.url)) {
-                for (let index = 0; index < data.url.length; index++) {
-                    const mediaUrl = data.url[index];
+                data.url.forEach((mediaUrl, index) => {
                     const isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
                     const videoId = `mainVideo_${index}`;
-                    
-                    let mediaElement;
-                    if (isVideo) {
-                        mediaElement = `<video id="${videoId}" controls loop class="media-preview" onplay="handleMainVideoPlay(this)" onpause="handleMainVideoPause(this)" onseeked="handleMainVideoSeeked(this)">
+                    const mediaElement = isVideo ? 
+                        `<video id="${videoId}" controls loop class="media-preview" onplay="handleMainVideoPlay(this)" onpause="handleMainVideoPause(this)" onseeked="handleMainVideoSeeked(this)">
                             <source src="${mediaUrl}" type="video/mp4">
                             Your browser does not support the video tag.
-                        </video>`;
-                    } else {
-                        const imgId = `img_${index}`;
-                        mediaElement = `<img id="${imgId}" class="media-preview loading" alt="Media ${index + 1}" />`;
-                    }
+                        </video>` :
+                        `<img class="media-preview" style="pointer-events:none;" src="${mediaUrl}" alt="Media ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDMwMCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjUwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1lZGlhIE5vdCBBdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPg=='" />`;
                     
                     mediaHtml += `
                         <div class="media-item">
@@ -845,7 +832,7 @@
                             </div>
                         </div>
                     `;
-                }
+                });
             }
 
             results.innerHTML = `
@@ -868,23 +855,6 @@
             
             results.style.display = 'block';
             
-            // Load images as blobs to avoid CORS
-            if (data.url && Array.isArray(data.url)) {
-                for (let index = 0; index < data.url.length; index++) {
-                    const mediaUrl = data.url[index];
-                    const isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
-                    
-                    if (!isVideo) {
-                        const imgElement = document.getElementById(`img_${index}`);
-                        if (imgElement) {
-                            const blobUrl = await loadImageAsBlob(mediaUrl);
-                            imgElement.src = blobUrl;
-                            imgElement.classList.remove('loading');
-                        }
-                    }
-                }
-            }
-            
             // Store reference to main videos
             setTimeout(() => {
                 if (data.url && Array.isArray(data.url)) {
@@ -900,3 +870,243 @@
                 }
             }, 100);
         }
+
+        function handleMainVideoPlay(video) {
+            const headerBackground = document.getElementById('headerBackground');
+            if (headerBackground && headerBackground.classList.contains('active')) {
+                // Sync time first
+                headerBackground.currentTime = video.currentTime;
+                // Then play
+                headerBackground.play().catch(e => console.log('Background video play failed:', e));
+                
+                // Pause other main videos
+                mainVideos.forEach(v => {
+                    if (v !== video && !v.paused) {
+                        v.pause();
+                    }
+                });
+            }
+        }
+
+        function handleMainVideoPause(video) {
+            const headerBackground = document.getElementById('headerBackground');
+            if (headerBackground && headerBackground.classList.contains('active')) {
+                headerBackground.pause();
+            }
+        }
+
+        function handleMainVideoSeeked(video) {
+            const headerBackground = document.getElementById('headerBackground');
+            if (headerBackground && headerBackground.classList.contains('active')) {
+                headerBackground.currentTime = video.currentTime;
+                
+                // If video is playing, ensure background is also playing
+                if (!video.paused) {
+                    headerBackground.play().catch(e => console.log('Background video play after seek failed:', e));
+                }
+            }
+        }
+
+        // Sync videos periodically with higher frequency
+        setInterval(syncVideos, 50);
+
+        function showError(message) {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="error">
+                    <i class="fa-solid fa-triangle-exclamation"></i><h3> Error</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+            results.style.display = 'block';
+            
+            // Reset header background to blue
+            const header = document.getElementById('header');
+            const headerBackground = document.getElementById('headerBackground');
+            const headerBackgroundImg = document.getElementById('headerBackgroundImg');
+            const headerOverlay = document.getElementById('headerOverlay');
+            
+            headerBackground.classList.remove('active');
+            headerBackgroundImg.classList.remove('active');
+            headerOverlay.classList.remove('active');
+            header.style.background = '#0078d4';
+        }
+
+        async function directDownload(url, filename) {
+            try {
+                if (!isTelegram) {
+                    // Regular browser download
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': '*/*',
+                        },
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Download failed');
+                    }
+                    
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = downloadUrl;
+                
+                    let extension = '';
+                    const contentType = response.headers.get('content-type');
+                    if (contentType) {
+                        if (contentType.includes('video')) {
+                            extension = '.mp4';
+                        } else if (contentType.includes('image/jpeg')) {
+                            extension = '.jpg';
+                        } else if (contentType.includes('image/png')) {
+                            extension = '.png';
+                        } else if (contentType.includes('image')) {
+                            extension = '.jpg';
+                        }
+                    } else {
+                        const urlParts = url.split('.');
+                        if (urlParts.length > 1) {
+                            const lastPart = urlParts[urlParts.length - 1].split('?')[0];
+                            if (['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm'].includes(lastPart.toLowerCase())) {
+                                extension = '.' + lastPart.toLowerCase();
+                            }
+                        }
+                    }
+                
+                    a.download = filename + extension;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(downloadUrl);
+                } else {
+                    // Telegram Mini WebApp download
+                    let extension = '';
+                    
+                    // Detect file extension from URL
+                    const urlParts = url.split('.');
+                    if (urlParts.length > 1) {
+                        const lastPart = urlParts[urlParts.length - 1].split('?')[0];
+                        if (['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm'].includes(lastPart.toLowerCase())) {
+                            extension = '.' + lastPart.toLowerCase();
+                        }
+                    }
+                    
+                    // If no extension detected, try to determine from URL content
+                    if (!extension) {
+                        if (url.includes('video') || url.includes('.mp4')) {
+                            extension = '.mp4';
+                        } else {
+                            extension = '.jpg';
+                        }
+                    }
+                    
+                    const fullFilename = filename + extension;
+                    
+                    // Use Telegram's downloadFile API
+                    tele.downloadFile({
+                        url: url,
+                        file_name: fullFilename
+                    }, function(result) {
+                        if (result) {
+                            console.log('Download successful:', fullFilename);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Download error:', error);
+            }
+        }
+
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                fetchMedia();
+            }
+        });
+
+        function shareUrl() {
+            if (!currentInputUrl) {
+                return;
+            }
+
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareUrl = `${baseUrl}?url=${btoa(currentInputUrl)}`;
+            
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                const shareBtn = document.getElementById('shareBtn');
+                const tooltip = document.getElementById('shareTooltip');
+                
+                shareBtn.classList.add('copied');
+                shareBtn.innerHTML = '<i class="fas fa-check"></i>';
+                tooltip.classList.add('show');
+                
+                setTimeout(() => {
+                    shareBtn.classList.remove('copied');
+                    shareBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    tooltip.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy link. Please try again.');
+            });
+        }
+
+        function setupBackgroundAudio(audioUrl) {
+            backgroundAudio = document.getElementById('backgroundAudio');
+            backgroundAudio.src = audioUrl;
+            
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.classList.add('show');
+            
+            // Auto play
+            backgroundAudio.play().then(() => {
+                isAudioPlaying = true;
+                updateAudioButton();
+            }).catch(err => {
+                console.log('Autoplay prevented:', err);
+                updateAudioStatus('Click to play');
+            });
+        }
+
+        function toggleAudio() {
+            if (!backgroundAudio) return;
+            
+            if (isAudioPlaying) {
+                backgroundAudio.pause();
+                isAudioPlaying = false;
+            } else {
+                backgroundAudio.play();
+                isAudioPlaying = true;
+            }
+            updateAudioButton();
+        }
+
+        function stopAudio() {
+            if (backgroundAudio) {
+                backgroundAudio.pause();
+                backgroundAudio.currentTime = 0;
+                isAudioPlaying = false;
+                updateAudioButton();
+            }
+        }
+
+        function updateAudioButton() {
+            const audioToggle = document.getElementById('audioToggle');
+            if (isAudioPlaying) {
+                audioToggle.innerHTML = '<i class="fas fa-pause"></i>';
+                updateAudioStatus('Playing...');
+            } else {
+                audioToggle.innerHTML = '<i class="fas fa-play"></i>';
+                updateAudioStatus('Paused');
+            }
+        }
+
+        function updateAudioStatus(status) {
+            const audioStatus = document.getElementById('audioStatus');
+            audioStatus.textContent = status;
+        }
+    </script>
+</body>
+</html>
