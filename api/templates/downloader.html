@@ -647,11 +647,7 @@
             if (startParam) {
                 document.querySelector('.share-btn').style.display = 'none';
             }
-            if (isTelegram) {
-                checkUserMember();
-            } else {
-                fetchMedia();
-            }
+            fetchMedia();
         }
 
         function goToDestination(destinationUrl) {
@@ -668,8 +664,6 @@
                 if (userStatus.result.status == "left") {
                     document.querySelector('.input-section').style.display = 'none';
                     showError("Join our channel first!");
-                } else {
-                    console.log(userStatus)
                 }
             }
         }
@@ -682,6 +676,10 @@
             if (!url) {
                 showError('Please enter a valid URL');
                 return;
+            }
+
+            if (isTelegram) {
+                checkUserMember();
             }
 
             currentInputUrl = url;
