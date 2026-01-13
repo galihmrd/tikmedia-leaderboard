@@ -122,3 +122,16 @@ def dl_api_():
         return jsonify({"error": response.text})
     else:
         return jsonify({"error": "input not found!"})
+
+is_tikmedia_member = Blueprint("tikmedia-member", __name__)
+@is_tikmedia_member.route("/api/check-user-member")
+def cek_member():
+    user_id = request.args.get("user_id")
+    chat_id = os.getenv("CHANNEL_FSUB_ID")
+    response = requests.get(
+        f"https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id={chat_id}&user_id={user_id}"
+    )
+    if response.status_code == 200:
+        data = response.json()
+        return jsonify(data)
+    return jsonify({"error": response.text})
