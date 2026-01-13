@@ -134,4 +134,4 @@ def cek_member():
     if response.status_code == 200:
         data = response.json()
         return jsonify(data)
-    return jsonify({"error": response.text})
+    return jsonify(response.json())
