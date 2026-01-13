@@ -665,7 +665,7 @@
                 showError("Join our channel first!")
                 document.querySelector('.input-section').style.display = 'none';
             } else {
-                if (userStatus.result.status === "left") {
+                if (userStatus.result.status == "left") {
                     document.querySelector('.input-section').style.display = 'none';
                     showError("Join our channel first!");
                 } else {
