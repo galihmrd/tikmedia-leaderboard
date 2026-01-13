@@ -934,17 +934,19 @@
 
         async function directDownload(url, filename) {
             try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': '*/*',
-                    },
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Download failed');
-                }
                 if (!isTelegram) {
+                    // Regular browser download
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': '*/*',
+                        },
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Download failed');
+                    }
+                    
                     const blob = await response.blob();
                     const downloadUrl = window.URL.createObjectURL(blob);
                 
@@ -980,15 +982,51 @@
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(downloadUrl);
                 } else {
-                    const contentType = response.headers.get('content-type');
+                    // Telegram Mini WebApp download
+                    let extension = '';
+                    
+                    // Detect file extension from URL
+                    const urlParts = url.split('.');
+                    if (urlParts.length > 1) {
+                        const lastPart = urlParts[urlParts.length - 1].split('?')[0];
+                        if (['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm'].includes(lastPart.toLowerCase())) {
+                            extension = '.' + lastPart.toLowerCase();
+                        }
+                    }
+                    
+                    // If no extension detected, try to determine from URL content
+                    if (!extension) {
+                        if (url.includes('video') || url.includes('.mp4')) {
+                            extension = '.mp4';
+                        } else {
+                            extension = '.jpg';
+                        }
+                    }
+                    
+                    const fullFilename = filename + extension;
+                    
+                    // Use Telegram's downloadFile API
                     tele.downloadFile({
-                        url: 'https://yourserver.com/files/report.pdf',
-                        file_name: filename + "." + contentType.split("/")[1]
-                    })
+                        url: url,
+                        file_name: fullFilename
+                    }, function(result) {
+                        if (result) {
+                            console.log('Download successful:', fullFilename);
+                            tele.showAlert('Download started: ' + fullFilename);
+                        } else {
+                            console.log('Download failed, opening in browser');
+                            tele.openLink(url);
+                        }
+                    });
                 }
             } catch (error) {
                 console.error('Download error:', error);
-                window.location.href = url;
+                if (isTelegram) {
+                    // Fallback: open link in external browser
+                    tele.openLink(url);
+                } else {
+                    window.location.href = url;
+                }
             }
         }
 
