@@ -366,7 +366,7 @@
             color: white;
             border: 2px solid rgba(255, 255, 255, 0.3);
             padding: 16px 40px;
-            border-radius: 50px;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
@@ -377,20 +377,20 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 8px 25px rgba(0, 120, 212, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
         }
 
         .direct-download-btn:hover {
-            background: linear-gradient(135deg, #005a9e, #004578);
+            background: rgba(0, 0, 0, 0.5);
             transform: scale(1.05);
-            box-shadow: 0 12px 35px rgba(0, 120, 212, 0.6);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
             border-color: rgba(255, 255, 255, 0.5);
         }
 
         .direct-download-btn:active {
             transform: scale(0.98);
-            box-shadow: 0 4px 15px rgba(0, 120, 212, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
         }
 
         .direct-download-btn i {
@@ -405,6 +405,7 @@
             margin: 30px auto;
             text-align: center;
             max-width: 900px;
+            border-radius: 5px;
         }
 
         .error h3 {
