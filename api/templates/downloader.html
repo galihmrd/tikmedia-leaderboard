@@ -316,54 +316,68 @@
         }
 
         .media-item {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #edebe9;
-            border-radius: 5px;
-            transition: all 0.2s ease;
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.3), rgba(70, 130, 180, 0.4));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(70, 130, 180, 0.2);
         }
 
         .media-item:hover {
-            border-color: #0078d4;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: rgba(100, 149, 237, 0.5);
+            box-shadow: 0 12px 48px rgba(70, 130, 180, 0.3);
+            transform: translateY(-5px);
         }
 
         .media-preview {
             width: 100%;
             height: 480px;
             object-fit: cover;
-            background: #faf9f8;
             display: block;
-            border-radius: 5px;
         }
 
         .media-actions {
             padding: 20px;
             text-align: center;
-            background: #faf9f8;
-            border-top: 1px solid #edebe9;
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.5), rgba(70, 130, 180, 0.6));
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .direct-download-btn {
-            background: #0078d4;
+            background: linear-gradient(135deg, #0078d4, #005a9e);
             color: white;
             border: none;
-            padding: 12px 28px;
-            border-radius: 5px;
+            padding: 14px 32px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.3s ease;
             width: 100%;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            font-weight: 600;
+            font-size: 0.95rem;
             text-decoration: none;
             display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 120, 212, 0.3);
         }
 
         .direct-download-btn:hover {
-            background: #005a9e;
+            background: linear-gradient(135deg, #005a9e, #004578);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 120, 212, 0.4);
         }
 
         .direct-download-btn:active {
-            background: #004578;
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 120, 212, 0.3);
+        }
+
+        .direct-download-btn i {
+            margin-right: 8px;
+            font-size: 1.1rem;
         }
 
         .error {
@@ -715,13 +729,11 @@
                 mainVideos.forEach(video => {
                     if (video) {
                         try {
-                            // Sync time with tolerance of 0.3 seconds
                             const timeDiff = Math.abs(headerBackground.currentTime - video.currentTime);
                             if (timeDiff > 0.3) {
                                 headerBackground.currentTime = video.currentTime;
                             }
                             
-                            // Sync play state
                             if (!video.paused && headerBackground.paused) {
                                 headerBackground.play().catch(e => console.log('Sync play failed:', e));
                             } else if (video.paused && !headerBackground.paused) {
@@ -739,25 +751,21 @@
             const results = document.getElementById('results');
             mainVideos = [];
             
-            // Check if all media are images and has audio_url
             let hasAudio = false;
             let allImages = true;
             
             if (data.url && Array.isArray(data.url) && data.url.length > 0) {
-                // Check if all are images
                 allImages = data.url.every(mediaUrl => {
                     const isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
                     return !isVideo;
                 });
                 
-                // Check if has audio_url
                 if (allImages && data.audio_url) {
                     hasAudio = true;
                     setupBackgroundAudio(data.audio_url);
                 }
             }
             
-            // Set header background to first media
             if (data.url && Array.isArray(data.url) && data.url.length > 0) {
                 const firstMedia = data.url[0];
                 const isVideo = firstMedia.includes('.mp4') || firstMedia.includes('video');
@@ -767,7 +775,6 @@
                 const headerOverlay = document.getElementById('headerOverlay');
                 const header = document.getElementById('header');
                 
-                // Reset both elements first
                 headerBackground.classList.remove('active');
                 headerBackgroundImg.classList.remove('active');
                 headerBackground.pause();
@@ -790,7 +797,6 @@
                     headerOverlay.classList.add('active');
                 }, 100);
             } else {
-                // Reset to blue Microsoft background if no media
                 const header = document.getElementById('header');
                 const headerBackground = document.getElementById('headerBackground');
                 const headerBackgroundImg = document.getElementById('headerBackgroundImg');
@@ -802,7 +808,6 @@
                 header.style.background = '#0078d4';
             }
             
-            // Get platform icon
             const platformIcons = {
                 'instagram': 'fab fa-instagram',
                 'tiktok': 'fab fa-tiktok',
@@ -835,7 +840,7 @@
                             ${mediaElement}
                             <div class="media-actions">
                                 <button class="direct-download-btn" onclick="directDownload('${mediaUrl}', '${data.platform}_${data.encryptedUrl}_${index + 1}')">
-                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                    <i class="fa-solid fa-download"></i> Download
                                 </button>
                             </div>
                         </div>
@@ -863,7 +868,6 @@
             
             results.style.display = 'block';
             
-            // Store reference to main videos
             setTimeout(() => {
                 if (data.url && Array.isArray(data.url)) {
                     data.url.forEach((mediaUrl, index) => {
@@ -882,12 +886,9 @@
         function handleMainVideoPlay(video) {
             const headerBackground = document.getElementById('headerBackground');
             if (headerBackground && headerBackground.classList.contains('active')) {
-                // Sync time first
                 headerBackground.currentTime = video.currentTime;
-                // Then play
                 headerBackground.play().catch(e => console.log('Background video play failed:', e));
                 
-                // Pause other main videos
                 mainVideos.forEach(v => {
                     if (v !== video && !v.paused) {
                         v.pause();
@@ -908,14 +909,12 @@
             if (headerBackground && headerBackground.classList.contains('active')) {
                 headerBackground.currentTime = video.currentTime;
                 
-                // If video is playing, ensure background is also playing
                 if (!video.paused) {
                     headerBackground.play().catch(e => console.log('Background video play after seek failed:', e));
                 }
             }
         }
 
-        // Sync videos periodically with higher frequency
         setInterval(syncVideos, 50);
 
         function showError(message) {
@@ -928,7 +927,6 @@
             `;
             results.style.display = 'block';
             
-            // Reset header background to blue
             const header = document.getElementById('header');
             const headerBackground = document.getElementById('headerBackground');
             const headerBackgroundImg = document.getElementById('headerBackgroundImg');
@@ -943,7 +941,6 @@
         async function directDownload(url, filename) {
             try {
                 if (!isTelegram) {
-                    // Regular browser download
                     const response = await fetch(url, {
                         method: 'GET',
                         headers: {
@@ -990,10 +987,8 @@
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(downloadUrl);
                 } else {
-                    // Telegram Mini WebApp download
                     let extension = '';
                     
-                    // Detect file extension from URL
                     const urlParts = url.split('.');
                     if (urlParts.length > 1) {
                         const lastPart = urlParts[urlParts.length - 1].split('?')[0];
@@ -1002,7 +997,6 @@
                         }
                     }
                     
-                    // If no extension detected, try to determine from URL content
                     if (!extension) {
                         if (url.includes('video') || url.includes('.mp4')) {
                             extension = '.mp4';
@@ -1013,7 +1007,6 @@
                     
                     const fullFilename = filename + extension;
                     
-                    // Use Telegram's downloadFile API
                     tele.downloadFile({
                         url: url,
                         file_name: fullFilename
@@ -1068,7 +1061,6 @@
             const audioPlayer = document.getElementById('audioPlayer');
             audioPlayer.classList.add('show');
             
-            // Auto play
             backgroundAudio.play().then(() => {
                 isAudioPlaying = true;
                 updateAudioButton();
