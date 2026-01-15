@@ -393,11 +393,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
         }
 
-        .direct-download-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         .direct-download-btn i {
             font-size: 1.2rem;
         }
@@ -658,7 +653,6 @@
         let backgroundAudio = null;
         let isAudioPlaying = false;
         let mainVideos = [];
-        let cachedMediaBlobs = {};
         const urlParams = new URLSearchParams(window.location.search);
         let urlRoute = urlParams.get("url");
         
@@ -694,32 +688,6 @@
 
         hideLoading();
         
-        async function preloadMedia(url) {
-            if (cachedMediaBlobs[url]) {
-                return cachedMediaBlobs[url];
-            }
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Failed to preload media');
-                }
-                
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-                cachedMediaBlobs[url] = {
-                    blobUrl: blobUrl,
-                    blob: blob,
-                    contentType: response.headers.get('content-type')
-                };
-                
-                return cachedMediaBlobs[url];
-            } catch (error) {
-                console.error('Preload error:', error);
-                return null;
-            }
-        }
-
         async function fetchMedia() {
             const urlInput = document.getElementById('urlInput');
             const inputForm = urlInput.value.trim();
@@ -751,25 +719,12 @@
             audioPlayer.classList.remove('show');
             stopAudio();
 
-            Object.keys(cachedMediaBlobs).forEach(key => {
-                URL.revokeObjectURL(cachedMediaBlobs[key].blobUrl);
-            });
-            cachedMediaBlobs = {};
-
             try {
                 const response = await fetch(`/api/dl?url=${encodeURIComponent(url)}`);
                 const data = await response.json();
                 
                 if (data.data) {
                     currentData = data.data;
-                    
-                    if (data.data.url && Array.isArray(data.data.url)) {
-                        loading.style.display = 'block';
-                        downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading media...';
-                        
-                        await Promise.all(data.data.url.map(mediaUrl => preloadMedia(mediaUrl)));
-                    }
-                    
                     displayResults(data.data);
                     document.getElementById('shareBtn').classList.add('show');
                 } else {
@@ -810,7 +765,7 @@
             }
         }
 
-        async function displayResults(data) {
+        function displayResults(data) {
             const results = document.getElementById('results');
             mainVideos = [];
             
@@ -831,7 +786,6 @@
             
             if (data.url && Array.isArray(data.url) && data.url.length > 0) {
                 const firstMedia = data.url[0];
-                const cachedFirst = cachedMediaBlobs[firstMedia];
                 const isVideo = firstMedia.includes('.mp4') || firstMedia.includes('video');
                 
                 const headerBackground = document.getElementById('headerBackground');
@@ -846,14 +800,14 @@
                 headerBackgroundImg.src = '';
                 
                 setTimeout(() => {
-                    if (isVideo && cachedFirst) {
-                        headerBackground.src = cachedFirst.blobUrl;
+                    if (isVideo) {
+                        headerBackground.src = firstMedia;
                         headerBackground.load();
                         headerBackground.play().catch(e => console.log('Video autoplay failed:', e));
                         headerBackground.classList.add('active');
                         header.style.background = 'rgba(0, 0, 0, 0.5)';
-                    } else if (cachedFirst) {
-                        headerBackgroundImg.src = cachedFirst.blobUrl;
+                    } else {
+                        headerBackgroundImg.src = firstMedia;
                         headerBackgroundImg.classList.add('active');
                         header.style.background = 'rgba(0, 0, 0, 0.5)';
                     }
@@ -884,22 +838,20 @@
             };
             
             const platformIcon = platformIcons[data.platform?.toLowerCase()] || 'fas fa-photo-video';
+            const platformClass = data.platform?.toLowerCase() || '';
             
             let mediaHtml = '';
             
             if (data.url && Array.isArray(data.url)) {
                 data.url.forEach((mediaUrl, index) => {
-                    const cachedMedia = cachedMediaBlobs[mediaUrl];
                     const isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
                     const videoId = `mainVideo_${index}`;
-                    const displayUrl = cachedMedia ? cachedMedia.blobUrl : mediaUrl;
-                    
                     const mediaElement = isVideo ? 
                         `<video id="${videoId}" controls loop class="media-preview" onplay="handleMainVideoPlay(this)" onpause="handleMainVideoPause(this)" onseeked="handleMainVideoSeeked(this)">
-                            <source src="${displayUrl}" type="video/mp4">
+                            <source src="${mediaUrl}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>` :
-                        `<img class="media-preview" style="pointer-events:none;" src="${displayUrl}" alt="Media ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDMwMCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjUwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1lZGlhIE5vdCBBdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPg=='" />`;
+                        `<img class="media-preview" style="pointer-events:none;" src="${mediaUrl}" alt="Media ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDMwMCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjUwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1lZGlhIE5vdCBBdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPg=='" />`;
                     
                     mediaHtml += `
                         <div class="media-item">
@@ -1009,37 +961,27 @@
 
         async function directDownload(url, filename) {
             try {
-                const cachedMedia = cachedMediaBlobs[url];
-                
                 if (!isTelegram) {
-                    let blob, contentType;
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': '*/*',
+                        },
+                    });
                     
-                    if (cachedMedia) {
-                        blob = cachedMedia.blob;
-                        contentType = cachedMedia.contentType;
-                    } else {
-                        const response = await fetch(url, {
-                            method: 'GET',
-                            headers: {
-                                'Accept': '*/*',
-                            },
-                        });
-                        
-                        if (!response.ok) {
-                            throw new Error('Download failed');
-                        }
-                        
-                        blob = await response.blob();
-                        contentType = response.headers.get('content-type');
+                    if (!response.ok) {
+                        throw new Error('Download failed');
                     }
                     
-                    const downloadUrl = cachedMedia ? cachedMedia.blobUrl : URL.createObjectURL(blob);
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
                 
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = downloadUrl;
                 
                     let extension = '';
+                    const contentType = response.headers.get('content-type');
                     if (contentType) {
                         if (contentType.includes('video')) {
                             extension = '.mp4';
@@ -1064,10 +1006,7 @@
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
-                    
-                    if (!cachedMedia) {
-                        URL.revokeObjectURL(downloadUrl);
-                    }
+                    window.URL.revokeObjectURL(downloadUrl);
                 } else {
                     let extension = '';
                     
@@ -1100,7 +1039,6 @@
                 }
             } catch (error) {
                 console.error('Download error:', error);
-                alert('Download failed. Please try again.');
             }
         }
 
@@ -1200,15 +1138,8 @@
                 document.getElementById('loadingOverlay').classList.add('hidden');
             }, 500);
         }
-        
         window.addEventListener('DOMContentLoaded', () => {
             showLoading();
-        });
-
-        window.addEventListener('beforeunload', () => {
-            Object.keys(cachedMediaBlobs).forEach(key => {
-                URL.revokeObjectURL(cachedMediaBlobs[key].blobUrl);
-            });
         });
     </script>
 </body>
