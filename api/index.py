@@ -114,7 +114,7 @@ def dl_api_():
     url = request.args.get("url")
     if url:
         response = requests.get(
-            f"{BASE_API}/api/downloader?url={url}"
+            f"{BASE_API}/downloader/api?url={url}"
         )
         if response.status_code == 200:
             data = response.json()
