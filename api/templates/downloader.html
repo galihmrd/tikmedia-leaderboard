@@ -32,7 +32,7 @@
             overflow: hidden;
         }
         .top-bar {
-            background: #0078d4;
+            background: none;
             color: white;
             padding: 16px 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -797,8 +797,7 @@
                 const headerBackgroundImg = document.getElementById('headerBackgroundImg');
                 const headerOverlay = document.getElementById('headerOverlay');
                 const header = document.getElementById('header');
-                const topBar = document.querySelector('.top-bar');
-
+                
                 headerBackground.classList.remove('active');
                 headerBackgroundImg.classList.remove('active');
                 headerBackground.pause();
@@ -812,12 +811,10 @@
                         headerBackground.play().catch(e => console.log('Video autoplay failed:', e));
                         headerBackground.classList.add('active');
                         header.style.background = 'rgba(0, 0, 0, 0.5)';
-                        topBar.style.background = 'rgba(0, 0, 0, 0.5)';
                     } else {
                         headerBackgroundImg.src = firstMedia;
                         headerBackgroundImg.classList.add('active');
                         header.style.background = 'rgba(0, 0, 0, 0.5)';
-                        topBar.style.background = 'rgba(0, 0, 0, 0.5)';
                     }
                     
                     headerOverlay.classList.add('active');
