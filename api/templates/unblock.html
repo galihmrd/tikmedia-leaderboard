@@ -114,9 +114,9 @@
                     });
                     const data = await response.json();
                     if (response.ok) {
-                        result.textContent = `Status: ${data.data}`;
+                        result.textContent = `Status: ${data.message}`;
                     } else {
-                        result.textContent = `Status: ${data.data}`;
+                        result.textContent = `Status: ${data.error}`;
                         result.style.color = 'red';
                     }
                 } catch (error) {
