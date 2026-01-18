@@ -104,7 +104,7 @@
                 
                 try {
                     // Mengubah menjadi GET request
-                    const url = `/api/tikmedia/unblock?id=${telegramUserId}`;
+                    const url = `/api/tikmedia/unblock?userId=${telegramUserId}`;
                     
                     const response = await fetch(url, {
                         method: 'GET',
