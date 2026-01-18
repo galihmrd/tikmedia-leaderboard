@@ -798,7 +798,9 @@
                 const headerBackgroundImg = document.getElementById('headerBackgroundImg');
                 const headerOverlay = document.getElementById('headerOverlay');
                 const header = document.getElementById('header');
-                
+                const topBar = document.querySelector('.top-bar');
+
+                topBar.style.background = 'rgba(0, 0, 0, 0.5)';
                 headerBackground.classList.remove('active');
                 headerBackgroundImg.classList.remove('active');
                 headerBackground.pause();
