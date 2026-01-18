@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unblock Request Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .agreement {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            user-select: none;
+        }
+        .columns {
+            display: flex;
+            gap: 20px;
+        }
+        .column {
+            flex: 1;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unblock Request</h1>
+    <p>To request unblocking, please rewrite the agreement statements below in the provided fields. The text must match exactly to proceed.</p>
+    
+    <div class="agreement">
+        <h3>Agreement Part 1:</h3>
+        <p>I acknowledge that I have violated the terms of service and promise to abide by all rules in the future.</p>
+        
+        <h3>Agreement Part 2:</h3>
+        <p>I understand that any further violations may result in permanent suspension, and I agree to use the service responsibly.</p>
+    </div>
+    
+    <form id="unblockForm">
+        <div class="columns">
+            <div class="column">
+                <label for="part1">Rewrite Agreement Part 1:</label>
+                <textarea id="part1" required></textarea>
+            </div>
+            <div class="column">
+                <label for="part2">Rewrite Agreement Part 2:</label>
+                <textarea id="part2" required></textarea>
+            </div>
+        </div>
+        <button type="submit">Unblock</button>
+    </form>
+    
+    <div id="result"></div>
+    <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+    <script>
+        const tele = window.Telegram.WebApp;
+        const startParam = tele.initDataUnsafe.start_param;
+        const telegramUserId = tele.initDataUnsafe?.user?.id
+
+        const form = document.getElementById('unblockForm');
+        const result = document.getElementById('result');
+        
+        const expectedPart1 = 'I acknowledge that I have violated the terms of service and promise to abide by all rules in the future.';
+        const expectedPart2 = 'I understand that any further violations may result in permanent suspension, and I agree to use the service responsibly.';
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userPart1 = document.getElementById('part1').value.trim();
+            const userPart2 = document.getElementById('part2').value.trim();
+            
+            if (userPart1 === expectedPart1 && userPart2 === expectedPart2) {
+                result.textContent = 'Verification successful. Sending unblock request...';
+                result.style.color = 'green';
+                
+                try {
+                    // Mengubah menjadi GET request
+                    const url = `/api/tikmedia/unblock?id={telegramUserId}`;
+                    
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        result.textContent = 'Unblock successfully!';
+                    } else {
+                        result.textContent = 'Failed to unblock. Please try again.';
+                        result.style.color = 'red';
+                    }
+                } catch (error) {
+                    result.textContent = 'Error sending request: ' + error.message;
+                    result.style.color = 'red';
+                }
+            } else {
+                result.textContent = 'The rewritten agreements do not match. Please try again.';
+                result.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
