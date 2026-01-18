@@ -8,6 +8,11 @@ from api.db import get_top_rankings, get_user_ranking
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 BASE_API = os.getenv("BASE_API")
 
+tikmedia_unblock = Blueprint("unblock", __name__)
+@tikmedia_unblock.route("/api/tikmedia/unblock")
+def unblock():
+    print(True)
+
 uptime = Blueprint("status", __name__)
 @uptime.route("/api/status")
 def status_api():
