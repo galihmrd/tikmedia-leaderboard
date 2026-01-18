@@ -39,9 +39,7 @@
         }
 
         .top-bar-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -594,20 +592,18 @@
         <div class="loader"></div>
         <div class="loading-text">Loading...</div>
     </div>
-    <div class="top-bar">
-        <div class="top-bar-content">
-            <nav class="nav-menu">
-                <button onclick="goToDestination('/')" class="nav-link">
-                    <i class="fas fa-chart-line"></i>
-                </button>
-                <button onclick="goToDestination('/downloader/uptime')" class="nav-link">
-                    <i class="fas fa-clock"></i>
-                </button>
-            </nav>
-        </div>
-    </div>
     <div class="container">
         <div class="header" id="header">
+            <div class="top-bar-content">
+                <nav class="nav-menu">
+                    <button onclick="goToDestination('/')" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                    </button>
+                    <button onclick="goToDestination('/downloader/uptime')" class="nav-link">
+                        <i class="fas fa-clock"></i>
+                    </button>
+                </nav>
+            </div>
             <video class="header-background" id="headerBackground" autoplay muted loop playsinline></video>
             <img class="header-background" id="headerBackgroundImg" alt="">
             <div class="header-overlay" id="headerOverlay"></div>
