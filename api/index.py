@@ -21,6 +21,11 @@ def unblock():
     else:
         return make_response(jsonify({"error": "user id not found!"}), 404)
 
+tikmedia_unblock_web = Blueprint("unblock_web", __name__)
+@tikmedia_unblock_web.route("/tikmedia/unblock")
+def unblock_web():
+    return render_template("unblock.html")
+
 uptime = Blueprint("status", __name__)
 @uptime.route("/api/status")
 def status_api():
