@@ -1,9 +1,9 @@
 import os
 from datetime import datetime
 import requests
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template, jsonify, request, make_response
 from api.db import get_top_rankings, get_user_ranking
-
+from api.blacklist_db import remove_from_blacklist
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 BASE_API = os.getenv("BASE_API")
@@ -11,7 +11,15 @@ BASE_API = os.getenv("BASE_API")
 tikmedia_unblock = Blueprint("unblock", __name__)
 @tikmedia_unblock.route("/api/tikmedia/unblock")
 def unblock():
-    print(True)
+    user_id = request.args.get("userId")
+    if user_id:
+        try:
+            unblock = remove_from_blacklist(user_id)
+            return make_response(jsonify(unblock), 200)
+        except Exception:
+            return make_response(jsonify({"error": str(e)}), 403)
+    else:
+        return make_response(jsonify({"error": "user id not found!"}), 404)
 
 uptime = Blueprint("status", __name__)
 @uptime.route("/api/status")
