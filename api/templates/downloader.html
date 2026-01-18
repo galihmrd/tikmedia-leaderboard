@@ -799,7 +799,6 @@
                 const header = document.getElementById('header');
                 const topBar = document.querySelector('.top-bar');
 
-                topBar.style.background = 'rgba(0, 0, 0, 0.5)';
                 headerBackground.classList.remove('active');
                 headerBackgroundImg.classList.remove('active');
                 headerBackground.pause();
@@ -813,10 +812,12 @@
                         headerBackground.play().catch(e => console.log('Video autoplay failed:', e));
                         headerBackground.classList.add('active');
                         header.style.background = 'rgba(0, 0, 0, 0.5)';
+                        topBar.style.background = 'rgba(0, 0, 0, 0.5)';
                     } else {
                         headerBackgroundImg.src = firstMedia;
                         headerBackgroundImg.classList.add('active');
                         header.style.background = 'rgba(0, 0, 0, 0.5)';
+                        topBar.style.background = 'rgba(0, 0, 0, 0.5)';
                     }
                     
                     headerOverlay.classList.add('active');
