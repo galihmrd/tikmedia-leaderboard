@@ -662,8 +662,14 @@
         const urlParams = new URLSearchParams(window.location.search);
         let urlRoute = urlParams.get("url");
         
+        if (isTelegram) {
+            document.querySelector('.share-btn').style.display = 'none';
+        }
         if (startParam || urlRoute) {
             document.querySelector('.input-section').style.display = 'none';
+            if (startParam) {
+                document.querySelector('.share-btn').style.display = 'none';
+            }
             fetchMedia();
         }
 
@@ -683,7 +689,6 @@
                     document.querySelector('.input-section').style.display = 'none';
                     showError("Join our channel first!");
                 }
-                return userStatus;
             }
         }
 
@@ -1055,13 +1060,7 @@
             }
 
             const baseUrl = window.location.origin + window.location.pathname;
-            if (!isTelegram) {
-                const shareUrl = `${baseUrl}?url=b64${btoa(currentInputUrl)}`;
-            } else {
-                const checkBot = checkUserMember()
-                const botUsername = checkBot.bot_username
-                const shareUrl = `http//t.me/${botUsername}/web?startapp=${currentInputUrl}`;
-            }
+            const shareUrl = `${baseUrl}?url=b64${btoa(currentInputUrl)}`;
             
             navigator.clipboard.writeText(shareUrl).then(() => {
                 const shareBtn = document.getElementById('shareBtn');
