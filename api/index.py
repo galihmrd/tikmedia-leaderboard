@@ -26,6 +26,16 @@ tikmedia_unblock_web = Blueprint("unblock_web", __name__)
 def unblock_web():
     return render_template("unblock.html")
 
+tikmedia_terms_web = Blueprint("unblock_web", __name__)
+@tikmedia_terms_web.route("/tikmedia/terms")
+def unblock_web_terms():
+    return render_template("terms.html")
+
+tikmedia_privacy_web = Blueprint("unblock_web", __name__)
+@tikmedia_privacy_web.route("/tikmedia/privacy")
+def unblock_web_privacy():
+    return render_template("privacy.html")
+
 uptime = Blueprint("status", __name__)
 @uptime.route("/api/status")
 def status_api():
