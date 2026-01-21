@@ -154,6 +154,8 @@ def cek_member():
     )
     if response.status_code == 200:
         data = response.json()
-        data.update({"result": {"bot_username": bot["result"]["username"]}})
+        result = data.get("result", {})
+        result.update({"bot_username": bot["result"]["username"]})
+        data.update(result)
         return jsonify(data)
     return jsonify(response.json())
