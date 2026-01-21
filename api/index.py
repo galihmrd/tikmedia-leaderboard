@@ -90,6 +90,9 @@ def home():
             user = requests.get(
                 f"https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id={data['user_id']}&user_id={data['user_id']}"
             ).json()
+            bot = requests.get(
+                f"https://api.telegram.org/bot{BOT_TOKEN}/getMe"
+            ).json()
             tele_user = "Telegram User"
             if user["ok"]:
                 tele_user = user["result"]["user"]["first_name"]
@@ -98,6 +101,7 @@ def home():
                     "rank": data["rank"],
                     "user_id": data["user_id"],
                     "name": tele_user,
+                    "bot_name": bot["result"]["username"],
                     "timestamp": data["last_updated"],
                     "downloads": data["total_actions"]
                 }
