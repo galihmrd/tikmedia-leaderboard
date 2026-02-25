@@ -13,6 +13,12 @@ collection = db.user
 
 def remove_from_blacklist(user_id: str) -> Dict:
     try:
+        check = collection.find_one({"user_id": user_id})
+        if "nsfw" in check["reason"].lower():
+            return {
+                "success": False,
+                "message": f"Permanently blacklist. Reason: {check['reason']}"
+            }
         result = collection.delete_one({"user_id": user_id})
             
         if result.deleted_count == 0:
