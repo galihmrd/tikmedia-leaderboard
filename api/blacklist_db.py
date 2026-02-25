@@ -31,3 +31,32 @@ def remove_from_blacklist(user_id: str) -> Dict:
             "success": False,
             "message": f"Error removing user from blacklist: {str(e)}"
         }
+
+def check_blacklist(self, user_id: str) -> Dict:
+    """
+    Check if a user is in blacklist
+        
+    Args:
+        user_id: User ID to check
+            
+    Returns:
+        Dict with check result
+    """
+    try:
+        document = collection.find_one({"user_id": user_id})
+            
+        if document:
+            return {
+                "is_blacklisted": True,
+                "data": document
+            }
+            
+        return {
+            "is_blacklisted": False,
+            "data": None
+        }
+    except Exception as e:
+        return {
+            "is_blacklisted": False,
+            "error": str(e)
+        }
