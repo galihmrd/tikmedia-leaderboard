@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 from flask import Blueprint, render_template, jsonify, request, make_response
 from api.db import get_top_rankings, get_user_ranking
-from api.blacklist_db import remove_from_blacklist, check_blacklist
+from api.blacklist_db import remove_from_blacklist
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 BASE_API = os.getenv("BASE_API")
@@ -14,10 +14,6 @@ def unblock():
     user_id = request.args.get("userId")
     if user_id:
         try:
-            bl_check = check_blacklist(user_id)
-            reason = bl_check["data"]["reason"]
-            if "nsfw" in reason.lower():
-                return make_response(jsonify({"error": "Serious violation!"}), 403)
             unblock = remove_from_blacklist(user_id)
             return make_response(jsonify(unblock), 200)
         except Exception:
