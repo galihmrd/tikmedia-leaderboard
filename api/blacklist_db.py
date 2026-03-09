@@ -35,7 +35,7 @@ def remove_from_blacklist(user_id: str) -> Dict:
     except Exception as e:
         return {
             "success": False,
-            "message": f"Error removing user from blacklist: {str(e)}"
+            "message": f"User {user_id} isn't blacklisted."
         }
 
 def check_blacklist(self, user_id: str) -> Dict:
