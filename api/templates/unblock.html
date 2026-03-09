@@ -115,6 +115,12 @@
                     const data = await response.json();
                     if (response.ok) {
                         result.textContent = `Status: ${data.message}`;
+                        if (data.message.toLowerCase().includes("nsfw")) {
+                            result.textContent = `Status: Permanently banned! - ${data.message}`;
+                            result.style.color = 'red';
+                        } else {
+                            result.textContent = `Status: ${data.message}`;
+                        }
                     } else {
                         result.textContent = `Status: ${data.error}`;
                         result.style.color = 'red';
@@ -124,8 +130,8 @@
                     result.style.color = 'red';
                 }
             } else {
-                result.textContent = 'The rewritten agreements do not match. Please try again.';
-                result.style.color = 'red';
+                result.textContent = '⚠️ The rewritten agreements do not match. Please try again.';
+                result.style.color = 'yellow';
             }
         });
     </script>
