@@ -1,12 +1,22 @@
 import os
 from datetime import datetime
 import requests
-from flask import Blueprint, render_template, jsonify, request, make_response
+import random
+from flask import Blueprint, redirect, render_template, jsonify, request, make_response
 from api.db import get_top_rankings, get_user_ranking
 from api.blacklist_db import remove_from_blacklist
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 BASE_API = os.getenv("BASE_API")
+
+shopee_urls = [
+    "https://s.shopee.co.id/16BILWuYU",
+    "https://s.shopee.co.id/9fGgo9LHz5",
+    "https://s.shopee.co.id/6AgodkGCr5",
+    "https://s.shopee.co.id/40cK3njEVB"
+]
+def ads():
+    return random.choice(shopee_urls)
 
 tikmedia_unblock = Blueprint("unblock", __name__)
 @tikmedia_unblock.route("/api/tikmedia/unblock")
@@ -24,6 +34,10 @@ def unblock():
 tikmedia_unblock_web = Blueprint("unblock_web", __name__)
 @tikmedia_unblock_web.route("/tikmedia/unblock")
 def unblock_web():
+    choice = ["web", "ads"]
+    get_choice = random.choice(choice)
+    if get_choice == "ads":
+        return redirect(ads())
     return render_template("unblock.html")
 
 tikmedia_terms_web = Blueprint("terms_web", __name__)
@@ -87,6 +101,10 @@ def status_web():
 home_ = Blueprint("home", __name__)
 @home_.route('/')
 def home():
+    choice = ["web", "ads"]
+    get_choice = random.choice(choice)
+    if get_choice == "ads":
+        return redirect(ads())
     return render_template("charts.html")
 
 api_ = Blueprint("api", __name__)
@@ -134,6 +152,10 @@ def home():
 downloader_web = Blueprint("downloader_web", __name__)
 @downloader_web.route("/downloader")
 def dl_web():
+    choice = ["web", "ads"]
+    get_choice = random.choice(choice)
+    if get_choice == "ads":
+        return redirect(ads())
     return render_template("downloader.html")
 
 dl_api = Blueprint("dl_api", __name__)
