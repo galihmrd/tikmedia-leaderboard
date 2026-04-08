@@ -34,10 +34,6 @@ def unblock():
 tikmedia_unblock_web = Blueprint("unblock_web", __name__)
 @tikmedia_unblock_web.route("/tikmedia/unblock")
 def unblock_web():
-    choice = ["web", "ads"]
-    get_choice = random.choice(choice)
-    if get_choice == "ads":
-        return redirect(ads())
     return render_template("unblock.html")
 
 tikmedia_terms_web = Blueprint("terms_web", __name__)
@@ -101,10 +97,6 @@ def status_web():
 home_ = Blueprint("home", __name__)
 @home_.route('/')
 def home():
-    choice = ["web", "ads"]
-    get_choice = random.choice(choice)
-    if get_choice == "ads":
-        return redirect(ads())
     return render_template("charts.html")
 
 api_ = Blueprint("api", __name__)
@@ -152,10 +144,6 @@ def home():
 downloader_web = Blueprint("downloader_web", __name__)
 @downloader_web.route("/downloader")
 def dl_web():
-    choice = ["web", "ads"]
-    get_choice = random.choice(choice)
-    if get_choice == "ads":
-        return redirect(ads())
     return render_template("downloader.html")
 
 dl_api = Blueprint("dl_api", __name__)
